@@ -37,7 +37,7 @@ shortenMoney = function (money) {
 };
 
 function timeDisplay(time) {
-  if (time <= 100) return time.toFixed(3) + " seconds"
+  if (time <= 100) return (time).toFixed(3) + " seconds"
   if (time >= 31536000) {
       return Decimal.floor(time / 31536000) + " years, " + Decimal.floor((time % 31536000) / 86400) + " days, " + Decimal.floor((time % 86400) / 3600) + " hours, " + Decimal.floor((time % 3600) / 60) + " minutes, and " + Decimal.floor(time % 60) + " seconds"
   } else if (time >= 86400) {
@@ -54,6 +54,6 @@ function getProgressBar(percent) {
   return `progress [${"=".repeat(doneChunks)}${"-".repeat(25-doneChunks)}] ${percent.toFixed(2)}%`
 }
 
-var getETA = (current,target,growSpeed) => `ETA: ${timeDisplay(target.sub(current).div(growSpeed).toFixed(2))}`
+var getETA = (current,target,growSpeed) => `ETA: ${timeDisplay(target.sub(current).div(growSpeed).toNumber())}`
 
 var getFinalProgressBar = (current,target,growSpeed) => [getProgressBar(current.div(target).times(100).toNumber()),getETA(current,target,growSpeed),`${shortenMoney(current)}/${shortenMoney(target)}`].join(" | ")

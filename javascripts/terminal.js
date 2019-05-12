@@ -22,11 +22,32 @@ $(function () {
             term.echo("captcha: Captcha task giver")
             term.echo("Usage: 'captcha new' requests a new task for solving")
             term.echo(" ".repeat(7) + "'captcha submit 123456' submits 123456 as the answer to the captcha")
+            if (player.loreId >= 2) term.echo(" ".repeat(7) + "'captcha stat' displays the stat of your account")
             term.echo("You gains 0.01 money and 1 trust for finishing a number captcha.")
             break
           case "new":
             term.echo("Requesting and downloading new task...")
-            runTimer(new Decimal(10),player.computer.internet.speed,new Decimal(1e308),function(){},function(){newCaptcha(1)})
+            runTimer(new Decimal(10),player.computer.internet.speed,new Decimal(1e308),function(){},function(){newCaptcha.call(null,1)})
+            break
+          case "submit":
+            if (args.length < 2) {
+              term.echo("You need to type the answer to be submitted!")
+              break
+            }
+            term.echo("Submitting your answer...")
+            runTimer(new Decimal(10),player.computer.internet.speed,new Decimal(1e308),function(){},function(){verifyAnswer.call(null,args[1])})
+            break
+          case "stat":
+            if (player.loreId < 2) {
+              term.echo("Error: You have done no task so far, so there isn't any stat to show.")
+              break
+            }
+            term.echo("Requesting your stats from the server...")
+            runTimer(new Decimal(5),player.computer.internet.speed,new Decimal(1e308),function(){},function(){
+              term.echo(`Money to withdraw: ${player.money}`)
+              term.echo(`Trust level: ${player.trust}`)
+            })
+            break
           default:
             term.echo("Error: No such option is available! Run 'captcha help' to see how to use this command correctly.")
         }
