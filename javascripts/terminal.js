@@ -6,8 +6,7 @@ $(function () {
     },
     rungame: function() {
       term.echo("Waiting 10 seconds for the game to startup....")
-      increase = player.computer.cpu.power
-      runTimer(new Decimal(1e10),player.computer.cpu.power,new Decimal(10000))
+      runTimer(new Decimal(1e10),player.computer.cpu.power,new Decimal(10000),function() { player.rungameAttempts = player.rungameAttempts.plus(1) },function(){})
     }
   }, {
     greetings: "Welcome to NGos!\n© 2019 Nyan cat, All Rights Reserved.",
