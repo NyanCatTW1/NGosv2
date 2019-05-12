@@ -3,10 +3,14 @@ function getInitPlayer() {
     computer: {
       cpu: {
         power: new Decimal(1)
+      },
+      internet: {
+        speed: new Decimal(1)
       }
     },
     lastUpdate: new Date().getTime(),
     rungameAttempts: new Decimal(0),
+    nextCaptchaAnswer: "",
     loreId: 0
   }
 }
@@ -25,6 +29,7 @@ function checkLore() {
   if (player.rungameAttempts.gte(1) && player.loreId === 0) {
     player.loreId++
     term.echo("Your computer is too weak for the game, you decides to do some captcha tasks online for some money for buying new hardwares.")
+    term.echo("captcha command unlocked.")
   }
 }
 
@@ -48,21 +53,51 @@ function resetTimer() {
 
 function timerTick() {
   if (timer.time.gt(timer.timeLimit)) {
-    term.echo("Error: Timeout.")
     timer.onfail()
     return
   }
   term.update(-1, getFinalProgressBar(timer.current,timer.target,timer.increase))
   if (timer.current.gte(timer.target)) {
-    term.echo("Done.")
     timer.onsuccess()
     return
   }
   setTimeout(timerTick,20)
 }
 
+function getRandomNumber(bottom, top) {
+  return Math.floor( Math.random() * ( 1 + top - bottom ) ) + bottom;
+}
+
+function newCaptcha(level) {
+  switch(level) {
+    case 1:
+      let random = Math.random()
+      if (random<0.8) {
+        let string = `${getRandomNumber(1,9)}${Math.random<0.5?"+":"-"}${getRandomNumber(1,9)}`
+        player.nextCaptchaAnswer = eval(string)
+        term.echo(`Submit the value of ${string}`)
+      } else if (random<0.95) {
+        let string = ""
+        for (let i=0;i<6;i++) {
+          string += getRandomNumber(1,9).toString()
+        }
+        player.nextCaptchaAnswer = string.reverse()
+        term.echo(`Submit ${string} in reversed text`)
+      } else {
+        let string = ""
+        let answer = 0
+        for (let i=0;i<6;i++) {
+          let randomDigit = getRandomNumber(1,9)
+          answer += randomDigit
+          string += randomDigit.toString()
+        }
+        player.nextCaptchaAnswer = answer.toString()
+        term.echo(`Submit sum of digits for ${string}`)
+      }
+  }
+}
+
 function runTimer(target,increase,timeLimit,onfail,onsuccess) {
-  console.log(onfail)
   resetTimer()
   timer.increase = increase
   timer.target = target
