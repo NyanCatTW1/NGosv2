@@ -103,8 +103,8 @@ function newCaptcha(level) {
         for (let i=0;i<6;i++) {
           string += getRandomNumber(1,9).toString()
         }
-        player.nextCaptchaAnswer = string.reverse()
-        term.echo(`Submit ${string} in reversed text`)
+        player.nextCaptchaAnswer = string.split("").reverse().join("")
+        term.echo(`Submit the number ${string} in reversed text`)
       } else {
         let string = ""
         let answer = 0
@@ -114,7 +114,7 @@ function newCaptcha(level) {
           string += randomDigit.toString()
         }
         player.nextCaptchaAnswer = answer.toString()
-        term.echo(`Submit sum of digits for ${string}`)
+        term.echo(`Submit the sum of digits for ${string}`)
       }
   }
 }

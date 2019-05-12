@@ -3,7 +3,7 @@ $(function () {
     help: function() {
       term.echo("help: Displays list of available commands")
       term.echo("rungame: Attempt to start the game")
-      if (player.loreId >= 1) term.echo("captcha: Captcha task giver, use 'captcha help' for details.")
+      if (player.loreId >= 1) term.echo("captcha: Captcha task manager, use 'captcha help' for details.")
     },
     rungame: function() {
       term.echo("Waiting 10 seconds for the game to startup....")
@@ -23,7 +23,7 @@ $(function () {
             term.echo("Usage: 'captcha new' requests a new task for solving")
             term.echo(" ".repeat(7) + "'captcha submit 123456' submits 123456 as the answer to the captcha")
             if (player.loreId >= 2) term.echo(" ".repeat(7) + "'captcha stat' displays the stat of your account")
-            term.echo("You gains 0.01 money and 1 trust for finishing a number captcha.")
+            term.echo("You gain 0.01 money and 1 trust for solving a number captcha.")
             break
           case "new":
             term.echo("Requesting and downloading new task...")
