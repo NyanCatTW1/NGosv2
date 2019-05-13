@@ -53,25 +53,30 @@ $(function () {
           case "help":
             term.echo("captcha: Captcha task manager")
             term.echo("Usage: 'captcha new' requests a new task for solving")
+            term.echo(" ".repeat(7) + "'captcha current' displays the task in case you forgot it")
             term.echo(" ".repeat(7) + "'captcha submit 123456' submits 123456 as the answer to the captcha")
             if (player.loreId >= 2) term.echo(" ".repeat(7) + "'captcha stat' displays the stat of your account")
             term.echo("You gain 0.01 money and 1 trust for solving a number captcha.")
-            break
+            break;
           case "new":
             newCaptcha.call(null,1,args[1]=="--force"?true:false)
-            break
+            break;
+          case "current":
+            term.echo("Current task:")
+            term.echo(player.currentTaskText)
+            break;
           case "submit":
             if (args.length < 2) {
               term.echo("You need to type the answer to be submitted!")
-              break
+              break;
             }
             term.echo("Submitting your answer...")
             runTimer(new Decimal(5),player.computer.internet.speed,new Decimal(0),function(){},function(){verifyAnswer.call(null,args[1])})
-            break
+            break;
           case "stat":
             if (player.loreId < 2) {
               term.echo("Error: You have done no task so far, so there isn't any stat to show.")
-              break
+              break;
             }
             term.echo("Requesting your stats from the server...")
             runTimer(new Decimal(5),player.computer.internet.speed,new Decimal(0),function(){},function(){
@@ -86,7 +91,7 @@ $(function () {
                   break;
               }
             })
-            break
+            break;
           default:
             term.echo("Error: No such option is available! Run 'captcha help' to see how to use this command correctly.")
         }
