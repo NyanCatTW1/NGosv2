@@ -1,3 +1,11 @@
+function hidePrompt() {
+  term.set_prompt("")
+}
+
+function showPrompt(prompt="NGos>") {
+  term.set_prompt(prompt)
+}
+
 $(function () {
   term = $('#terminal').terminal({
     help: function() {

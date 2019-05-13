@@ -92,12 +92,14 @@ function resetTimer() {
 
 function timerTick() {
   if (timer.time.gt(timer.timeLimit) && timer.timeLimit.notEquals(0)) {
+    showPrompt()
     term.resume()
     timer.onfail()
     return
   }
   term.update(term.last_index(), getFinalProgressBar(timer.current, timer.target, timer.increase))
   if (timer.current.gte(timer.target)) {
+    showPrompt()
     term.resume()
     timer.onsuccess()
     return
@@ -188,6 +190,7 @@ function runTimer(target, increase, timeLimit, onfail, onsuccess) {
   timer.onfail = onfail
   timer.onsuccess = onsuccess
   term.pause(true)
+  hidePrompt()
   term.echo(getFinalProgressBar(timer.current, timer.target, timer.increase))
   timerTick()
 }
