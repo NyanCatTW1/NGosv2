@@ -69,6 +69,12 @@ function startInterval() {
   gameLoopIntervalId = setInterval(gameLoop, 10)
 }
 
+function startGame() {
+  loadGame()
+  startInterval()
+  setInterval(saveGame, 5000)
+}
+
 function gameLoop(diff) { // 1 diff = 0.001 seconds
   var thisUpdate = new Date().getTime()
   if (typeof diff === 'undefined') var diff = Math.min(thisUpdate - player.lastUpdate, 21600000);
@@ -172,7 +178,6 @@ function newCaptcha(level, forced) {
   } else {
     spawnCaptcha(level)
   }
-
 }
 
 function runTimer(target, increase, timeLimit, onfail, onsuccess) {
