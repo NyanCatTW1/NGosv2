@@ -54,12 +54,14 @@ function checkTrustStage() {
         term.echo("You should be able to withdraw your money with 'captcha withdraw' at this stage.")
         player.trustStage++
       }
+      break;
     case 1:
       if (player.trust.lt(10)) {
         term.echo("You have done mistakes and caused your trust to drop below 10.")
         term.echo("Withdraw is locked until you are trustworthy again.")
         player.trustStage--
       }
+      break;
   }
 }
 
