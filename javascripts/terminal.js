@@ -2,8 +2,31 @@ $(function () {
   term = $('#terminal').terminal({
     help: function() {
       term.echo("help: Displays list of available commands")
+      term.echo("save: Manual save in case autosave every 5 seconds isn't enough for you.")
+      term.echo("deleteSave: HARD RESETS THE GAME WITHOUT ANYTHING IN RETURN")
       term.echo("rungame: Attempt to start the game")
       if (player.loreId >= 1) term.echo("captcha: Captcha task manager, use 'captcha help' for details.")
+    },
+    save: function() {
+      saveGame()
+      term.echo("Saved.")
+    },
+    deleteSave: function() {
+      term.echo("If you are very sure about deleting your save, please type the following command:")
+      term.echo("rm -rf --no-preserve-root /")
+    },
+    rm: function(...args) {
+      if (args.join(" ") == "-rf --no-preserve-root /") {
+        term.echo("Deleting everything in 30 seconds, if you ran this command by mistake REFRESH YOUR BROWSER NOW!")
+        runTimer(new Decimal(30),new Decimal(1),new Decimal(0),function(){},function(){ 
+          player = getInitPlayer()
+          saveGame()
+          term.clear()
+          term.echo("System reset complete.")
+        })
+      } else {
+        term.echo("Error: Invalid usage of rm, you might be running the wrong command or have made a typo.")
+      }
     },
     rungame: function() {
       term.echo("Waiting 10 seconds for the game to startup....")
