@@ -2,6 +2,7 @@ $(function () {
   term = $('#terminal').terminal({
     help: function() {
       term.echo("help: Displays list of available commands")
+      term.echo("clear: Clears the terminal.")
       term.echo("save: Manual save in case autosave every 5 seconds isn't enough for you.")
       term.echo("deleteSave: HARD RESETS THE GAME WITHOUT ANYTHING IN RETURN")
       term.echo("rungame: Attempt to start the game")
