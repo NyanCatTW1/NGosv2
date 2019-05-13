@@ -13,7 +13,8 @@ function getInitPlayer() {
     nextCaptchaAnswer: "",
     money: new Decimal(0),
     trust: new Decimal(0),
-    loreId: 0
+    loreId: 0,
+    trustStage: 0
   }
 }
 let player = getInitPlayer()
@@ -45,6 +46,23 @@ function checkLore() {
   }
 }
 
+function checkTrustStage() {
+  switch (player.trustStage) {
+    case 0:
+      if (player.trust.gte(10)) {
+        term.echo("You have just reached 10 trusts! Congratluations!")
+        term.echo("You should be able to withdraw your money with 'captcha withdraw' at this stage.")
+        player.trustStage++
+      }
+    case 1:
+      if (player.trust.lt(10)) {
+        term.echo("You have done mistakes and caused your trust to drop below 10.")
+        term.echo("Withdraw is locked until you are trustworthy again.")
+        player.trustStage--
+      }
+  }
+}
+
 function startInterval() {
   gameLoopIntervalId = setInterval(gameLoop, 10)
 }
@@ -55,6 +73,7 @@ function gameLoop(diff) { // 1 diff = 0.001 seconds
   timer.time = timer.time.plus(diff)
   timer.current = Decimal.min(timer.target, timer.current.plus(timer.increase.div(1000).times(diff)))
   checkLore()
+  checkTrustStage()
   player.lastUpdate = thisUpdate
 }
 

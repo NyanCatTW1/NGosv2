@@ -45,6 +45,14 @@ $(function () {
             runTimer(new Decimal(5),player.computer.internet.speed,new Decimal(0),function(){},function(){
               term.echo(`Money to withdraw: ${player.money}`)
               term.echo(`Trust level: ${player.trust}`)
+              switch (player.trustStage) {
+                case 0:
+                  term.echo("Withdraw is available at 10 trust")
+                  break;
+                default:
+                  term.echo("You reached the highest trust we can handle right now, blame dev for this!")
+                  break;
+              }
             })
             break
           default:
