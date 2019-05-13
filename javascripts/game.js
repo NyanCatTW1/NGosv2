@@ -28,15 +28,21 @@ let timer = {
 }
 
 function checkLore() {
-  if (player.rungameAttempts.gte(1) && player.loreId === 0) {
-    player.loreId++
-    term.echo("Your computer is too weak for the game, you decides to do some captcha tasks online for some money for buying new hardwares.")
-    term.echo("captcha command unlocked.")
-  }
-  if (player.trust.notEquals(0) && player.loreId === 1) {
-    player.loreId++
-    term.echo("You have just done a task, to see your money and trust, type 'captcha stat'")
-    term.echo("stat unlocked for captcha command.")
+  switch (player.loreId) {
+    case 0:
+      if (player.rungameAttempts.gte(1)) {
+        player.loreId++
+        term.echo("Your computer is too weak for the game, you decides to do some captcha tasks online for some money for buying new hardwares.")
+        term.echo("captcha command unlocked.")
+      }
+      break;
+    case 1:
+      if (player.trust.notEquals(0)) {
+        player.loreId++
+        term.echo("You have just done a task, to see your money and trust, type 'captcha stat'")
+        term.echo("stat unlocked for captcha command.")
+      break;
+    }
   }
 }
 
