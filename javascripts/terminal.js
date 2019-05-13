@@ -26,8 +26,7 @@ $(function () {
             term.echo("You gain 0.01 money and 1 trust for solving a number captcha.")
             break
           case "new":
-            term.echo("Requesting and downloading new task...")
-            runTimer(new Decimal(10),player.computer.internet.speed,new Decimal(1e308),function(){},function(){newCaptcha.call(null,1)})
+            newCaptcha.call(null,1,args[1]=="--force"?true:false)
             break
           case "submit":
             if (args.length < 2) {
@@ -35,7 +34,7 @@ $(function () {
               break
             }
             term.echo("Submitting your answer...")
-            runTimer(new Decimal(10),player.computer.internet.speed,new Decimal(1e308),function(){},function(){verifyAnswer.call(null,args[1])})
+            runTimer(new Decimal(5),player.computer.internet.speed,new Decimal(0),function(){},function(){verifyAnswer.call(null,args[1])})
             break
           case "stat":
             if (player.loreId < 2) {
@@ -43,7 +42,7 @@ $(function () {
               break
             }
             term.echo("Requesting your stats from the server...")
-            runTimer(new Decimal(5),player.computer.internet.speed,new Decimal(1e308),function(){},function(){
+            runTimer(new Decimal(5),player.computer.internet.speed,new Decimal(0),function(){},function(){
               term.echo(`Money to withdraw: ${player.money}`)
               term.echo(`Trust level: ${player.trust}`)
             })
