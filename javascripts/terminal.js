@@ -19,7 +19,7 @@ $(function () {
       } else {
         switch (args[0]) {
           case "help":
-            term.echo("captcha: Captcha task giver")
+            term.echo("captcha: Captcha task manager")
             term.echo("Usage: 'captcha new' requests a new task for solving")
             term.echo(" ".repeat(7) + "'captcha submit 123456' submits 123456 as the answer to the captcha")
             if (player.loreId >= 2) term.echo(" ".repeat(7) + "'captcha stat' displays the stat of your account")
