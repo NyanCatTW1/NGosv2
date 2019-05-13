@@ -25,6 +25,7 @@ let timer = {
   increase: new Decimal(0),
   target: new Decimal(0),
   timeLimit: new Decimal(0),
+  thisProgressBarIndex: 0,
   onfail: function () {},
   onsuccess: function () {}
 }
@@ -98,7 +99,7 @@ function timerTick() {
     timer.onfail()
     return
   }
-  term.update(term.last_index(), getFinalProgressBar(timer.current, timer.target, timer.increase))
+  term.update(timer.thisProgressBarIndex, getFinalProgressBar(timer.current, timer.target, timer.increase))
   if (timer.current.gte(timer.target)) {
     showPrompt()
     term.resume()
@@ -194,5 +195,6 @@ function runTimer(target, increase, timeLimit, onfail, onsuccess) {
   term.pause(true)
   hidePrompt()
   term.echo(getFinalProgressBar(timer.current, timer.target, timer.increase))
+  timer.thisProgressBarIndex = term.last_index()
   timerTick()
 }
