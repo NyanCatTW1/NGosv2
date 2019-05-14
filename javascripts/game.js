@@ -116,6 +116,7 @@ function getRandomNumber(bottom, top) {
 function verifyAnswer(answer) {
   if (player.currentTaskAnswer === "") {
     term.echo("Error: You haven't start a task yet.")
+    return
   }
   term.echo("Validating your answer...")
   runTimer(new Decimal(5), player.computer.internet.speed, new Decimal(0), function () {}, function () {
@@ -128,6 +129,7 @@ function verifyAnswer(answer) {
       player.trust = player.trust.minus(5)
     }
     player.currentTaskAnswer = ""
+    player.currentTaskText = ""
   })
 }
 
@@ -139,7 +141,7 @@ function spawnCaptcha(level) {
     case 1:
       let random = Math.random()
       if (random < 0.8) {
-        let string = `${getRandomNumber(1,9)}${Math.random<0.5?"+":"-"}${getRandomNumber(1,9)}`
+        let string = `${getRandomNumber(1,9)}${Math.random()<0.5?"+":"-"}${getRandomNumber(1,9)}`
         player.currentTaskAnswer = eval(string)
         player.currentTaskText = `Submit the value of ${string}`
       } else if (random < 0.95) {

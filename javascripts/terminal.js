@@ -62,6 +62,10 @@ $(function () {
             newCaptcha.call(null,1,args[1]=="--force"?true:false)
             break;
           case "current":
+            if (player.currentTaskText === "") {
+              term.echo("Error: You haven't start a task yet.")
+              return
+            }
             term.echo("Current task:")
             term.echo(player.currentTaskText)
             break;
