@@ -15,6 +15,7 @@ $(function () {
       term.echo("deleteSave: HARD RESETS THE GAME WITHOUT ANYTHING IN RETURN")
       term.echo("rungame: Attempt to start the game")
       if (player.loreId >= 1) term.echo("captcha: Captcha task manager, use 'captcha help' for details.")
+      if (player.loreId >= 3) term.echo("store: Online store client in a command prompt! Use 'store help' for details.")
     },
     save: function() {
       saveGame()
@@ -56,6 +57,7 @@ $(function () {
             term.echo(" ".repeat(7) + "'captcha current' displays the task in case you forgot it")
             term.echo(" ".repeat(7) + "'captcha submit 123456' submits 123456 as the answer to the captcha")
             if (player.loreId >= 2) term.echo(" ".repeat(7) + "'captcha stat' displays the stat of your account")
+            if (player.bestTrustStage >= 1) term.echo(" ".repeat(7) + "'captcha withdraw' withdraws all the money from your account, which makes them spendable in store.")
             term.echo("You gain 0.01 money and 1 trust for solving a number captcha.")
             break;
           case "new":
@@ -84,7 +86,7 @@ $(function () {
             }
             term.echo("Requesting your stats from the server...")
             runTimer(new Decimal(5),player.computer.internet.speed,new Decimal(0),function(){},function(){
-              term.echo(`Money to withdraw: ${player.money}`)
+              term.echo(`Money available for withdraw: ${player.money}`)
               term.echo(`Trust level: ${player.trust}`)
               switch (player.trustStage) {
                 case 0:
@@ -96,10 +98,36 @@ $(function () {
               }
             })
             break;
+          case "withdraw":
+            if (player.bestTrustStage < 1) {
+              term.echo("Error: No such option is available! Run 'captcha help' to see how to use this command correctly.")
+            } else {
+              term.echo("Verifying your trust level...")
+              runTimer(new Decimal(5),player.computer.internet.speed,new Decimal(0),function(){},function(){
+                if (player.trustStage < 1) {
+                  term.echo("Sorry, but your trust level is too low for a withdraw, please retry once you gain at least 10 trust.")
+                } else {
+                  term.echo("Trust level matches minimem requirement, withdrawing all money from your account...")
+                  runTimer(player.money,new Decimal(0.01),new Decimal(0),function(){},function(){
+                    player.withdrawnMoney = player.withdrawnMoney.plus(player.money)
+                    player.money = new Decimal(0)
+                    term.echo("Operation complete.")
+                  })
+                }
+              })
+            }
+            break;
           default:
             term.echo("Error: No such option is available! Run 'captcha help' to see how to use this command correctly.")
         }
       }
+    },
+    store: function(...args) {
+      if (player.loreId < 3) {
+        fakeCommandNotFound("store")
+        return
+      }
+      term.echo("The store is still under devlopment!")
     }
   }, {
     greetings: "Welcome to NGos!\n© 2019 Nyan cat, All Rights Reserved.",

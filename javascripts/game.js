@@ -13,9 +13,11 @@ function getInitPlayer() {
     currentTaskAnswer: "",
     currentTaskText: "",
     money: new Decimal(0),
+    withdrawnMoney: new Decimal(0),
     trust: new Decimal(0),
     loreId: 0,
-    trustStage: 0
+    trustStage: 0,
+    bestTrustStage: 0
   }
 }
 let player = getInitPlayer()
@@ -45,6 +47,13 @@ function checkLore() {
         term.echo("You have just done a task, to see your money and trust, type 'captcha stat'")
       break;
     }
+    case 2:
+      if (player.withdrawnMoney.notEquals(0)) {
+        player.loreId++
+        term.echo("Now that you have money to spend, you can buy upgrades with them at the store.")
+        term.echo("store command available.")
+      }
+      break;
   }
 }
 
@@ -84,6 +93,7 @@ function gameLoop(diff) { // 1 diff = 0.001 seconds
   timer.current = Decimal.min(timer.target, timer.current.plus(timer.increase.div(1000).times(diff)))
   checkLore()
   checkTrustStage()
+  player.bestTrustStage = Math.max(player.trustStage,player.bestTrustStage)
   player.lastUpdate = thisUpdate
 }
 
