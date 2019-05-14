@@ -81,7 +81,8 @@ function startInterval() {
 }
 
 function startGame() {
-  loadGame()
+  let savefile = localStorage.getItem(saveName)
+  if (!(savefile === null)) loadGame(savefile)
   startInterval()
   setInterval(saveGame, 5000)
 }

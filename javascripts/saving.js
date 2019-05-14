@@ -8,9 +8,9 @@ function saveGame() {
   localStorage.setItem(saveName,btoa(JSON.stringify(player)))
 }
 
-function loadGame() {
+function loadGame(save) {
   let reference = getInitPlayer()
-  let save = JSON.parse(atob(localStorage.getItem(saveName)))
+  let save = JSON.parse(atob())
   let temp = listItems(reference)
   let decimalList = temp[0]
   let itemList = temp[1]
