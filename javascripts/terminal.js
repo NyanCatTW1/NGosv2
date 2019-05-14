@@ -6,12 +6,35 @@ function showPrompt(prompt="NGos>") {
   term.set_prompt(prompt)
 }
 
+// Code from https://techoverflow.net/2018/03/30/copying-strings-to-the-clipboard-using-pure-javascript/
+function copyStringToClipboard(str) {
+  // Create new element
+  var el = document.createElement('textarea');
+  // Set value (string to be copied)
+  el.value = str;
+  // Set non-editable to avoid focus and move outside of view
+  el.setAttribute('readonly', '');
+  el.style = {
+    position: 'absolute',
+    left: '-9999px'
+  };
+  document.body.appendChild(el);
+  // Select text inside element
+  el.select();
+  // Copy text to clipboard
+  document.execCommand('copy');
+  // Remove temporary element
+  document.body.removeChild(el);
+}
+
 $(function () {
   term = $('#terminal').terminal({
     help: function() {
       term.echo("help: Displays list of available commands")
       term.echo("clear: Clears the terminal.")
       term.echo("save: Manual save in case autosave every 5 seconds isn't enough for you.")
+      term.echo("export: Exports the save into your clipboard.")
+      term.echo("import: Imports your exported save.")
       term.echo("deleteSave: HARD RESETS THE GAME WITHOUT ANYTHING IN RETURN")
       term.echo("rungame: Attempt to start the game")
       if (player.loreId >= 1) term.echo("captcha: Captcha task manager, use 'captcha help' for details.")
@@ -20,6 +43,13 @@ $(function () {
     save: function() {
       saveGame()
       term.echo("Saved.")
+    },
+    export: function() {
+      copyStringToClipboard(btoa(JSON.stringify(player)))
+      term.echo("Save exported to your clipboard.")
+    },
+    import: function() {
+      loadGame(prompt("Please paste your exported save below:"),true)
     },
     deleteSave: function() {
       term.echo("If you are very sure about deleting your save, please type the following command:")
@@ -130,7 +160,7 @@ $(function () {
       term.echo("The store is still under devlopment!")
     }
   }, {
-    greetings: "Welcome to NGos!\n© 2019 Nyan cat, All Rights Reserved.",
+    greetings: "Welcome to NGos!\n© 2019 Nyan cat, All Rights Reserved.\nType 'help' for a list of available commands.",
     prompt: 'NGos>',
     checkArity: false
   });
