@@ -136,7 +136,7 @@ function verifyAnswer(answer) {
 function spawnCaptcha(level) {
   term.echo("Requesting and downloading new task...")
   runTimer(new Decimal(10), player.computer.cpu.power, new Decimal(0), function () {}, function () {
-    term.echo("Next task:")
+    term.echo("New task:")
     switch (level) {
     case 1:
       let random = Math.random()
