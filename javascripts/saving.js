@@ -12,7 +12,7 @@ function loadGame(save,imported=false) {
   let reference = getInitPlayer()
   try {
     save = JSON.parse(atob(save))
-  } catch {
+  } catch(err) {
     if (imported) {
       term.echo("Error: Imported save is in invalid format, please make sure you've copied the save correctly and isn't just typing gibberish.")
       return
