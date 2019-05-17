@@ -157,6 +157,7 @@ $(function () {
         fakeCommandNotFound("store")
         return
       }
+      term.echo("Warning: The store is still under development, don't expect it to work, cause even I don't.")
       if (args.length === 0) {
         term.echo("You need to give an argument to use this command! Run 'store help' to see how to use this command correctly.")
         return
