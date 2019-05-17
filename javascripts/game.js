@@ -17,7 +17,8 @@ function getInitPlayer() {
     trust: new Decimal(0),
     loreId: 0,
     trustStage: 0,
-    bestTrustStage: 0
+    bestTrustStage: 0,
+    storeUpgradesBought: {}
   }
 }
 let player = getInitPlayer()

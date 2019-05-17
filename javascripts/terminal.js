@@ -157,7 +157,6 @@ $(function () {
         fakeCommandNotFound("store")
         return
       }
-      term.echo("Warning: The store is still under development, don't expect it to work, cause even I don't.")
       if (args.length === 0) {
         term.echo("You need to give an argument to use this command! Run 'store help' to see how to use this command correctly.")
         return
@@ -165,8 +164,48 @@ $(function () {
       switch (args[0]) {
         case "help":
           term.echo("store: Online store client.")
-          term.echo("Usage: 'store list' shows how much money you can spend and a list of available products.")
+          term.echo("Usage: 'store list' shows a list of available products.")
+          term.echo(" ".repeat(7) + "'store stat' shows how much money is available.")
           term.echo(" ".repeat(7) + "'store buy X' buys the product with name of X.")
+          break;
+        case "list":
+          term.echo("Downloading product list...")
+          runTimer(new Decimal(5),player.computer.internet.speed,new Decimal(0),function(){},function(){
+            term.echo("Done, displaying list of products...")
+            term.echo("Annoucement: Yes there isn't anything here right now, but there will be soon.")
+            Object.keys(storeUpgradeList).forEach(function(codename) {
+              let details = storeUpgradeList[codename]
+              term.echo(`${details[0]}, costs ${shorten(details[1])} money.`)
+              term.echo(`Owned amount: ${Object.keys(player.storeUpgradesBought).includes(codename)?player.storeUpgradesBought[codename]:"0"}`)
+              term.echo(`Description: ${details[2]}`)
+              term.echo(`Codename: ${codename}`)
+              term.echo("")
+            })
+          })
+          break;
+        case "stat":
+          term.echo(`Available money: ${shorten(player.withdrawnMoney)}`)
+          break;
+        case "buy":
+          term.echo("Checking if the product exists and you can afford it...")
+          runTimer(new Decimal(5),player.computer.internet.speed,new Decimal(0),function(){},function(){
+            let details = storeUpgradeList[args[1]]
+            if (typeof details === "undefined") {
+              term.echo("Error: The product you asked for don't exist! Make sure you are using the codename and not the full name.")
+              return
+            }
+            if (player.withdrawnMoney.lt(details[1])) {
+              term.echo(`Warning: You can't afford this product! You have ${shorten(player.withdrawnMoney)} money but the product costs ${shorten(details[1])} money.`)
+              return
+            }
+            term.echo("Purchasing the product...")
+            runTimer(new Decimal(20),player.computer.internet.speed,new Decimal(0),function(){},function(){
+              player.withdrawnMoney = player.withdrawnMoney.minus(details[1])
+              if (!Object.keys(player.storeUpgradesBought).includes(args[1])) player.storeUpgradesBought[args[1]] = 0
+              player.storeUpgradesBought[args[1]]++
+              term.echo("Purchase complete.")
+            })
+          })
           break;
         default:
           term.echo("Error: No such option is available! Run 'store help' to see how to use this command correctly.")
