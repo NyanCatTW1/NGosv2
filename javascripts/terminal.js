@@ -137,7 +137,7 @@ $(function () {
                 if (player.trustStage < 1) {
                   term.echo("Sorry, but your trust level is too low for a withdraw, please retry once you gain at least 10 trust.")
                 } else {
-                  term.echo("Trust level matches minimem requirement, withdrawing all money from your account...")
+                  term.echo("Trust level matches minimum requirement, withdrawing all money from your account...")
                   runTimer(player.money,new Decimal(0.01),new Decimal(0),function(){},function(){
                     player.withdrawnMoney = player.withdrawnMoney.plus(player.money)
                     player.money = new Decimal(0)
@@ -157,7 +157,19 @@ $(function () {
         fakeCommandNotFound("store")
         return
       }
-      term.echo("The store is still under devlopment!")
+      if (args.length === 0) {
+        term.echo("You need to give an argument to use this command! Run 'store help' to see how to use this command correctly.")
+        return
+      }
+      switch (args[0]) {
+        case "help":
+          term.echo("store: Online store client.")
+          term.echo("Usage: 'store list' shows how much money you can spend and a list of available products.")
+          term.echo(" ".repeat(7) + "'store buy X' buys the product with name of X.")
+          break;
+        default:
+          term.echo("Error: No such option is available! Run 'store help' to see how to use this command correctly.")
+      }
     }
   }, {
     greetings: "Welcome to NGos!\n© 2019 Nyan cat, All Rights Reserved.\nType 'help' for a list of available commands.",
