@@ -1,4 +1,20 @@
 let saveName = "ngossave"
+let initPlayerFunctionName = "getInitPlayer"
+let playerVarName = "player"
+
+function onImportError() {
+    term.echo("Error: Imported save is in invalid format, please make sure you've copied the save correctly and isn't just typing gibberish.")
+}
+
+function onLoadError() {
+    term.echo("I think you got your save messed up so bad we can't load it, the save have been exported automatically to your clipboard for debug purpose, please send it to the developer(Nyan cat) to see what's wrong!")
+    copyStringToClipboard(save)
+}
+
+function onImportSuccess() {
+    term.echo("Save imported successfully.")
+}
+// Only change things above to fit your game UNLESS you know what you're doing
 
 Array.prototype.diff = function(a) {
     return this.filter(function(i) {return a.indexOf(i) < 0;});
@@ -9,16 +25,16 @@ function saveGame() {
 }
 
 function loadGame(save,imported=false) {
-  let reference = getInitPlayer()
+  let reference = window[initPlayerFunctionName]()
   try {
     save = JSON.parse(atob(save))
   } catch(err) {
     if (imported) {
-      term.echo("Error: Imported save is in invalid format, please make sure you've copied the save correctly and isn't just typing gibberish.")
+      onImportError()
       return
     } else {
-      term.echo("I think you got your save messed up so bad we can't load it, the save have been exported automatically to your clipboard for debug purpose, please send it to the developer(Nyan cat) to see what's wrong!")
-      copyStringToClipboard(save)
+      onLoadError()
+      return
     }
   }
   let temp = listItems(reference)
@@ -38,8 +54,8 @@ function loadGame(save,imported=false) {
     eval(`save.${value} = new Decimal(save.${value})`)
   })
   
-  player = save
-  if (imported) term.echo("Save imported successfully.")
+  window[playerVarName] = save
+  if (imported) onImportSuccess()
 }
 
 function listItems(data,nestIndex="") {
