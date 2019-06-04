@@ -61,7 +61,7 @@ function loadGame(save,imported=false) {
 function listItems(data,nestIndex="") {
   let decimalList = []
   let itemList = []
-  $.each(data, function (index, value) {
+  data.forEach(function (value, index) {
     itemList.push(nestIndex + (nestIndex===""?"":".") + index)
     if (typeof value == 'object') {
       if (value instanceof Decimal) {
