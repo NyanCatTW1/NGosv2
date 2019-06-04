@@ -21,7 +21,7 @@ Array.prototype.diff = function(a) {
 };
 
 function saveGame() {
-  localStorage.setItem(saveName,btoa(JSON.stringify(playerVarName)))
+  localStorage.setItem(saveName,btoa(JSON.stringify(window[playerVarName])))
 }
 
 function loadGame(save,imported=false) {
