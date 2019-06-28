@@ -196,6 +196,7 @@ $(function () {
             }
             if (player.storeProgramsBought.includes(args[1])) {
               term.echo(`Warning: You already owned this program!`)
+              return
             }
             if (player.withdrawnMoney.lt(details[1])) {
               term.echo(`Warning: You can't afford this program! You have ${shorten(player.withdrawnMoney)} money but the program costs ${shorten(details[1])} money.`)
