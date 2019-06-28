@@ -194,12 +194,12 @@ $(function () {
               term.echo("Error: The program you asked for don't exist! Make sure you are using the codename and not the full name.")
               return
             }
+            if (player.storeProgramsBought.includes(args[1])) {
+              term.echo(`Warning: You already owned this program!`)
+            }
             if (player.withdrawnMoney.lt(details[1])) {
               term.echo(`Warning: You can't afford this program! You have ${shorten(player.withdrawnMoney)} money but the program costs ${shorten(details[1])} money.`)
               return
-            }
-            if (player.storeProgramsBought.includes(args[1])) {
-              term.echo(`Warning: You already owned this program!`)
             }
             term.echo("Purchasing and downloading the program...")
             runTimer(new Decimal(20),player.computer.internet.speed,new Decimal(0),function(){},function(){
