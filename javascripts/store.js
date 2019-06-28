@@ -1,4 +1,4 @@
-// Upgrade codename: Upgrade name, Upgrade cost, Upgrade description
-const storeUpgradeList = {
-  "test": ["Test Product", new Decimal(0), "A dummy product to test store system."]
+// Program codename: Program name, Program cost, Program description
+const storeProgramList = {
+  "browser": ["Web browser", new Decimal("0.1"), "A web browser so you can actually browse things online freedomly, it's on sale and nobody can live without it, so why not?"]
 }

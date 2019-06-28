@@ -16,7 +16,7 @@ function formatValue(value, places, placesUnder1000) {
         if (power > 100000) return (matissa + "e" + power.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
         return (matissa + "e" + power);
     } else {
-        return (value).toFixed(placesUnder1000);
+        return (value).toFixed(placesUnder1000).replace(/([0-9]+(\.[0-9]+[1-9])?)(\.?0+$)/, '$1');
     }
 }
 

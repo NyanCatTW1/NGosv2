@@ -1,6 +1,7 @@
 let saveName = "ngossave"
 let initPlayerFunctionName = "getInitPlayer"
-let playerVarName = "player"
+let playerVarName = "player" // DO NOT USE THE WORD "SAVE"
+let importDangerAlertText = "Your imported save seems to be missing some values, which means importing this save might be destructive, if you have made a backup of your current save and are sure about importing this save please press OK, if not, press cancel and the save will not be imported."
 
 function onImportError() {
     term.echo("Error: Imported save is in invalid format, please make sure you've copied the save correctly and isn't just typing gibberish.")
@@ -46,7 +47,7 @@ function loadGame(save,imported=false) {
       return
   }
   if (missingItem.length != 0 && imported) {
-    if (!confirm("Your imported save seems to be missing some values, which means importing this save might be destructive, if you have made a backup of your current save and are sure about importing this save please press OK, if not, press cancel and the save will not be imported.")) {
+    if (!confirm(importDangerAlertText)) {
       return
     }
   }

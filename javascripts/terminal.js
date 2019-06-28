@@ -38,7 +38,8 @@ $(function () {
       term.echo("deleteSave: HARD RESETS THE GAME WITHOUT ANYTHING IN RETURN")
       term.echo("rungame: Attempt to start the game")
       if (player.loreId >= 1) term.echo("captcha: Captcha task manager, use 'captcha help' for details.")
-      if (player.loreId >= 3) term.echo("store: Online store client in a command prompt! Use 'store help' for details.")
+      if (player.loreId >= 3) term.echo("store: App Store for NGOS! Use 'store help' for details.")
+      if (player.storeProgramsBought.includes("browser")) term.echo("browser: A web browser.")
     },
     save: function() {
       saveGame()
@@ -163,20 +164,19 @@ $(function () {
       }
       switch (args[0]) {
         case "help":
-          term.echo("store: Online store client.")
-          term.echo("Usage: 'store list' shows a list of available products.")
+          term.echo("store: The App Store.")
+          term.echo("Usage: 'store list' shows a list of available programs.")
           term.echo(" ".repeat(7) + "'store stat' shows how much money is available.")
-          term.echo(" ".repeat(7) + "'store buy X' buys the product with name of X.")
+          term.echo(" ".repeat(7) + "'store buy X' buys the program with name of X.")
           break;
         case "list":
-          term.echo("Downloading product list...")
+          term.echo("Downloading program list...")
           runTimer(new Decimal(5),player.computer.internet.speed,new Decimal(0),function(){},function(){
-            term.echo("Done, displaying list of products...")
-            term.echo("Annoucement: Yes there isn't anything here right now, but there will be soon.")
-            Object.keys(storeUpgradeList).forEach(function(codename) {
-              let details = storeUpgradeList[codename]
+            term.echo("Done, displaying list of programs available...")
+            Object.keys(storeProgramList).forEach(function(codename) {
+              let details = storeProgramList[codename]
               term.echo(`${details[0]}, costs ${shorten(details[1])} money.`)
-              term.echo(`Owned amount: ${Object.keys(player.storeUpgradesBought).includes(codename)?player.storeUpgradesBought[codename]:"0"}`)
+              term.echo(`Owned? ${player.storeProgramsBought.includes(codename)?"Yes":"No"}`)
               term.echo(`Description: ${details[2]}`)
               term.echo(`Codename: ${codename}`)
               term.echo("")
@@ -187,28 +187,60 @@ $(function () {
           term.echo(`Available money: ${shorten(player.withdrawnMoney)}`)
           break;
         case "buy":
-          term.echo("Checking if the product exists and you can afford it...")
+          term.echo("Checking if the program exists and you can afford it...")
           runTimer(new Decimal(5),player.computer.internet.speed,new Decimal(0),function(){},function(){
-            let details = storeUpgradeList[args[1]]
+            let details = storeProgramList[args[1]]
             if (typeof details === "undefined") {
-              term.echo("Error: The product you asked for don't exist! Make sure you are using the codename and not the full name.")
+              term.echo("Error: The program you asked for don't exist! Make sure you are using the codename and not the full name.")
               return
             }
             if (player.withdrawnMoney.lt(details[1])) {
-              term.echo(`Warning: You can't afford this product! You have ${shorten(player.withdrawnMoney)} money but the product costs ${shorten(details[1])} money.`)
+              term.echo(`Warning: You can't afford this program! You have ${shorten(player.withdrawnMoney)} money but the program costs ${shorten(details[1])} money.`)
               return
             }
-            term.echo("Purchasing the product...")
+            if (player.storeProgramsBought.includes(args[1])) {
+              term.echo(`Warning: You already owned this program!`)
+            }
+            term.echo("Purchasing and downloading the program...")
             runTimer(new Decimal(20),player.computer.internet.speed,new Decimal(0),function(){},function(){
               player.withdrawnMoney = player.withdrawnMoney.minus(details[1])
-              if (!Object.keys(player.storeUpgradesBought).includes(args[1])) player.storeUpgradesBought[args[1]] = 0
-              player.storeUpgradesBought[args[1]]++
+              player.storeProgramsBought.push(args[1])
               term.echo("Purchase complete.")
             })
           })
           break;
         default:
           term.echo("Error: No such option is available! Run 'store help' to see how to use this command correctly.")
+      }
+    },
+    browser: function(...args) {
+      if (!player.storeProgramsBought.includes("browser")) fakeCommandNotFound("browser")
+      else {
+        term.echo("Starting the browser...")
+        runTimer(new Decimal(10),player.computer.cpu.power,new Decimal(0),function(){},function(){
+          term.echo("---END OF GAME CONTENT---")
+          term.echo("When this exists, you can learn skills, buy or download things, upgrade your hardwares, etc.")
+        })
+      }
+    },
+    eval: function(...args) {
+      if (args.length === 0) {
+        term.echo("Warning: You are trying to access a DEV ONLY command, if you entered this command in error please don't bruteforce it, otherwise, please enter your order.")
+      } else if (args.pop() == "FuckifIknow.") {
+        let out = eval(args.join(" "))
+        if (out === undefined) {
+          term.echo("No value returned.")
+        }
+        else {
+          try {
+            term.echo(String(out))
+          } catch (err) {
+            term.echo("Error occured while displaying the result")
+            term.echo(err)
+          }
+        }
+      } else {
+        term.echo("Error, verify required: Does The Black Moon Howl? Remove spaces please")
       }
     }
   }, {
