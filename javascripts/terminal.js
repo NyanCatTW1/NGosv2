@@ -86,10 +86,9 @@ $(function () {
             term.echo("captcha: Captcha task manager")
             term.echo("Usage: 'captcha new' requests a new task for solving")
             term.echo(" ".repeat(7) + "'captcha current' displays the task in case you forgot it")
-            term.echo(" ".repeat(7) + "'captcha submit 123456' submits 123456 as the answer to the captcha")
+            term.echo(" ".repeat(7) + "'captcha submit X' submits X as the answer to the captcha")
             if (player.loreId >= 2) term.echo(" ".repeat(7) + "'captcha stat' displays the stat of your account")
-            if (player.bestTrustStage >= 1) term.echo(" ".repeat(7) + "'captcha withdraw' withdraws all the money from your account, which makes them spendable in store.")
-            term.echo("You gain 0.01 money and 1 trust for solving a number captcha.")
+            if (player.bestTrustStage >= 1) term.echo(" ".repeat(7) + "'captcha withdraw' withdraws all the money from your account, which makes them freely spendable to you")
             break;
           case "new":
             newCaptcha.call(null,1,args[1]=="--force"?true:false)
