@@ -59,7 +59,7 @@ $(function () {
     rm: function(...args) {
       if (args.join(" ") == "-rf --no-preserve-root /") {
         term.echo("Deleting everything in 30 seconds, if you ran this command by mistake REFRESH YOUR BROWSER NOW!")
-        runTimer(new Decimal(30),new Decimal(1),onsuccess=function(){ 
+        runTimer(new Decimal(30),new Decimal(1),new Decimal(0),function(){},function(){ 
           player = getInitPlayer()
           saveGame()
           term.clear()
@@ -108,9 +108,7 @@ $(function () {
               break;
             }
             term.echo("Submitting your answer...")
-            runTimer(new Decimal(5),player.computer.internet.speed,new Decimal(0),function(){},onsuccess=function(){ // Magic code
-              verifyAnswer(args[1])
-            })
+            runTimer(new Decimal(5),player.computer.internet.speed,new Decimal(0),function(){},function(){verifyAnswer.call(null,args[1])})
             break;
           case "stat":
             if (player.loreId < 2) {
@@ -118,7 +116,7 @@ $(function () {
               break;
             }
             term.echo("Requesting your stats from the server...")
-            runTimer(new Decimal(5),player.computer.internet.speed,onsuccess=function(){
+            runTimer(new Decimal(5),player.computer.internet.speed,new Decimal(0),function(){},function(){
               term.echo(`Money available for withdraw: ${player.money}`)
               term.echo(`Trust level: ${player.trust}`)
               switch (player.trustStage) {
@@ -136,12 +134,12 @@ $(function () {
               term.echo("Error: No such option is available! Run 'captcha help' to see how to use this command correctly.")
             } else {
               term.echo("Verifying your trust level...")
-              runTimer(new Decimal(5),player.computer.internet.speed,onsuccess=function(){
+              runTimer(new Decimal(5),player.computer.internet.speed,new Decimal(0),function(){},function(){
                 if (player.trustStage < 1) {
                   term.echo("Sorry, but your trust level is too low for a withdraw, please retry once you gain at least 10 trust.")
                 } else {
                   term.echo("Trust level matches minimum requirement, withdrawing all money from your account...")
-                  runTimer(player.money,new Decimal(0.01),onsuccess=function(){
+                  runTimer(player.money,new Decimal(0.01),new Decimal(0),function(){},function(){
                     player.withdrawnMoney = player.withdrawnMoney.plus(player.money)
                     player.money = new Decimal(0)
                     term.echo("Operation complete.")
@@ -173,7 +171,7 @@ $(function () {
           break;
         case "list":
           term.echo("Downloading program list...")
-          runTimer(new Decimal(5),player.computer.internet.speed,onsuccess=function(){
+          runTimer(new Decimal(5),player.computer.internet.speed,new Decimal(0),function(){},function(){
             term.echo("Done, displaying list of programs available...")
             Object.keys(storeProgramList).forEach(function(codename) {
               let details = storeProgramList[codename]
@@ -190,7 +188,7 @@ $(function () {
           break;
         case "buy":
           term.echo("Checking if the program exists and you can afford it...")
-          runTimer(new Decimal(5),player.computer.internet.speed,onsuccess=function(){
+          runTimer(new Decimal(5),player.computer.internet.speed,new Decimal(0),function(){},function(){
             let details = storeProgramList[args[1]]
             if (typeof details === "undefined") {
               term.echo("Error: The program you asked for don't exist! Make sure you are using the codename and not the full name.")
@@ -205,7 +203,7 @@ $(function () {
               return
             }
             term.echo("Purchasing and downloading the program...")
-            runTimer(new Decimal(20),player.computer.internet.speed,onsuccess=function(){
+            runTimer(new Decimal(20),player.computer.internet.speed,new Decimal(0),function(){},function(){
               player.withdrawnMoney = player.withdrawnMoney.minus(details[1])
               player.storeProgramsBought.push(args[1])
               term.echo("Purchase complete.")
@@ -220,7 +218,7 @@ $(function () {
       if (!player.storeProgramsBought.includes("browser")) fakeCommandNotFound("browser")
       else {
         term.echo("Starting the browser...")
-        runTimer(new Decimal(10),player.computer.cpu.power,onsuccess=function(){
+        runTimer(new Decimal(10),player.computer.cpu.power,new Decimal(0),function(){},function(){
           term.echo("---END OF GAME CONTENT---")
           term.echo("When this exists, you can learn skills, buy or download things, upgrade your hardwares, etc.")
         })
