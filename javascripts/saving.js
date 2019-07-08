@@ -31,10 +31,9 @@ function loadGame(save, imported = false) {
     let reference = window[initPlayerFunctionName]()
     try {
         var save = JSON.parse(atob(save))
-        let temp = listItems(reference)
-        let decimalList = temp[0]
-        let itemList = temp[1]
-        let missingItem = itemList.diff(listItems(save)[1])
+        let refLists = listItems(reference)
+        let saveLists = listItems(save)
+        let missingItem = refLists[0].diff(saveLists[0])
         if (missingItem.includes("save")) {
             console.log("Unrecoverable corrupted save detected, loading default save...")
             return
@@ -44,10 +43,12 @@ function loadGame(save, imported = false) {
                 return
             }
         }
+      
         missingItem.forEach(function(value) {
             eval(`save${generateArrayAccessCode(value)} = reference${generateArrayAccessCode(value)}`) // No one will exploit their browser with localStorage right
         })
-
+      
+        let decimalList = saveLists[1].diff(refLists[1])
         decimalList.forEach(function(value) {
             eval(`save${generateArrayAccessCode(value)} = new Decimal(save${generateArrayAccessCode(value)})`)
         })
@@ -76,20 +77,24 @@ function generateArrayAccessCode(keys) {
 }
 
 function listItems(data,nestIndex="") {
-  let decimalList = []
   let itemList = []
+  let stringList = []
   Object.keys(data).forEach(function (index) {
     let value = data[index]
-    itemList.push(nestIndex + (nestIndex===""?"":".") + index)
-    if (typeof value == 'object') {
-      if (value instanceof Decimal) {
-        decimalList.push(nestIndex + (nestIndex===""?"":".") + index)
-      } else {
-        let temp = listItems(value, nestIndex + (nestIndex===""?"":".") + index)
-        decimalList = decimalList.concat(temp[0])
-        itemList = itemList.concat(temp[1])
-      }
+    let thisIndex = nestIndex + (nestIndex===""?"":".") + index
+    itemList.push(thisIndex)
+    switch (typeof value) {
+      case "object":
+        if (!(value instanceof Decimal)) {
+          let temp = listItems(value, thisIndex)
+          itemList = itemList.concat(temp[0])
+          stringList = stringList.concat(temp[1])
+        }
+        break;
+      case "string":
+        stringList.push(thisIndex)
+        break;
     }
   });
-  return [decimalList,itemList]
+  return [itemList,stringList]
 };
