@@ -1,3 +1,5 @@
+// Note: Make sure your saving variable is defined by VAR and not LET, otherwise it won't work
+// And please, just please make sure you change the stuff below to suit your code, otherwise it will burst on fire
 let saveName = "ngossave"
 let initPlayerFunctionName = "getInitPlayer"
 let playerVarName = "player" // DO NOT USE THE WORD "SAVE"
