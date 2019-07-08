@@ -27,42 +27,52 @@ function saveGame() {
   localStorage.setItem(saveName,btoa(JSON.stringify(window[playerVarName])))
 }
 
-function loadGame(save,imported=false) {
-  let reference = window[initPlayerFunctionName]()
-  try {
-    save = JSON.parse(atob(save))
-  } catch(err) {
-    if (imported) {
-      onImportError()
-      return
-    } else {
-      onLoadError()
-      return
+function loadGame(save, imported = false) {
+    let reference = window[initPlayerFunctionName]()
+    try {
+        var save = JSON.parse(atob(save))
+        let temp = listItems(reference)
+        let decimalList = temp[0]
+        let itemList = temp[1]
+        let missingItem = itemList.diff(listItems(save)[1])
+        if (missingItem.includes("save")) {
+            console.log("Unrecoverable corrupted save detected, loading default save...")
+            return
+        }
+        if (missingItem.length != 0 && imported) {
+            if (!confirm(importDangerAlertText)) {
+                return
+            }
+        }
+        missingItem.forEach(function(value) {
+            eval(`save${generateArrayAccessCode(value)} = reference${generateArrayAccessCode(value)}`) // No one will exploit their browser with localStorage right
+        })
+
+        decimalList.forEach(function(value) {
+            eval(`save${generateArrayAccessCode(value)} = new Decimal(save${generateArrayAccessCode(value)})`)
+        })
+
+        window[playerVarName] = save
+        if (imported) onImportSuccess()
+    } catch (err) {
+        if (imported) {
+            console.log(err)
+            onImportError()
+            return
+        } else {
+            console.log(err)
+            onLoadError()
+            return
+        }
     }
-  }
-  let temp = listItems(reference)
-  let decimalList = temp[0]
-  let itemList = temp[1]
-  let missingItem = itemList.diff(listItems(save)[1])
-  if (missingItem.includes("save")) {
-      console.log("Unrecoverable corrupted save detected, loading default save...")
-      return
-  }
-  if (missingItem.length != 0 && imported) {
-    if (!confirm(importDangerAlertText)) {
-      return
-    }
-  }
-  missingItem.forEach(function(value) {
-    eval(`save.${value} = reference.${value}`) // No one will exploit their browser with localStorage right
-  })
-  
-  decimalList.forEach(function(value) {
-    eval(`save.${value} = new Decimal(save.${value})`)
-  })
-  
-  window[playerVarName] = save
-  if (imported) onImportSuccess()
+}
+
+function generateArrayAccessCode(keys) {
+    let out = ""
+    keys.split(".").forEach(function(value) {
+        out += `["${value}"]`
+    })
+    return out
 }
 
 function listItems(data,nestIndex="") {
