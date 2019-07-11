@@ -246,7 +246,7 @@ $(function () {
       }
     }
   }, {
-    greetings: "Welcome to NGos!\n© 2019 Nyan cat, All Rights Reserved.\nType 'help' for a list of available commands.",
+    greetings: `Welcome${player.loreId>0?" back":""} to NGos!\n© 2019 Nyan cat, All Rights Reserved.\nType 'help' for a list of available commands.`,
     prompt: 'NGos>',
     checkArity: false
   });
