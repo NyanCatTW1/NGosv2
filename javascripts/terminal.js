@@ -40,6 +40,8 @@ $(function () {
       if (player.loreId >= 1) term.echo("captcha: Captcha task manager, use 'captcha help' for details.")
       if (player.loreId >= 3) term.echo("store: App Store for NGOS! Use 'store help' for details.")
       if (player.storeProgramsBought.includes("browser")) term.echo("browser: A web browser.")
+      if (player.storeProgramsBought.includes("network")) term.echo("network: Network upgrade utility.")
+      if (player.storeProgramsBought.includes("learn")) term.echo("learn: Teach yourself some skills so you can reach your target easier and faster. use 'learn help' for details.")
     },
     save: function() {
       saveGame()
@@ -79,7 +81,7 @@ $(function () {
         return
       }
       if (args.length === 0) {
-        term.echo("You need to give an argument to use this command! Run 'captcha help' to see how to use this command correctly.")
+        term.echo("You need to give an argument to use this command! Use 'captcha help' to see how to use this command correctly.")
       } else {
         switch (args[0]) {
           case "help":
@@ -131,7 +133,7 @@ $(function () {
             break;
           case "withdraw":
             if (player.bestTrustStage < 1) {
-              term.echo("Error: No such option is available! Run 'captcha help' to see how to use this command correctly.")
+              term.echo("Error: No such option is available! Use 'captcha help' to see how to use this command correctly.")
             } else {
               term.echo("Verifying your trust level...")
               runTimer(new Decimal(5),player.computer.internet.speed,new Decimal(0),function(){},function(){
@@ -149,7 +151,7 @@ $(function () {
             }
             break;
           default:
-            term.echo("Error: No such option is available! Run 'captcha help' to see how to use this command correctly.")
+            term.echo("Error: No such option is available! Use 'captcha help' to see how to use this command correctly.")
         }
       }
     },
@@ -159,7 +161,7 @@ $(function () {
         return
       }
       if (args.length === 0) {
-        term.echo("You need to give an argument to use this command! Run 'store help' to see how to use this command correctly.")
+        term.echo("You need to give an argument to use this command! Use 'store help' to see how to use this command correctly.")
         return
       }
       switch (args[0]) {
@@ -211,7 +213,7 @@ $(function () {
           })
           break;
         default:
-          term.echo("Error: No such option is available! Run 'store help' to see how to use this command correctly.")
+          term.echo("Error: No such option is available! Use 'store help' to see how to use this command correctly.")
       }
     },
     browser: function(...args) {
@@ -223,6 +225,36 @@ $(function () {
           showBrowseOptions(true)
           startProgram(browserCLI)
         })
+      }
+    },
+    network: function(...args) {
+      if (!player.storeProgramsBought.includes("network")) fakeCommandNotFound("network")
+      else {
+        if (args.length === 0) {
+          term.echo("Better network available:")
+          term.echo("Name: Dial-up network")
+          term.echo("Cost: 2 dollars")
+          term.echo("Speed: 5 kilobit/s")
+          term.echo("Capacity: 10 megabits")
+          term.echo("If you have enough money and wish to buy this network, run network purchase.")
+          return
+        }
+        switch (args[0]) {
+          case "purchase":
+            term.echo("ENDGAME: The network upgrade system is still under development, please be patient!")
+            break
+          default:
+            term.echo("Error: No such option is available! Use 'network' to see how to use this command correctly.")
+            break
+        }
+      }
+    },
+    learn: function(...args) {
+      if (args.length === 0) {
+        term.echo("You need to give an argument to use this command! Use 'learn help' to see how to use this command correctly.")
+        return
+      } else {
+        term.echo("ENDGAME: You are still figuring out how to register in that coding site, you should figure it out in a few days! Browsing in terminal isn't as easy as you thought...")
       }
     },
     eval: function(...args) {
