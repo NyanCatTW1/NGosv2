@@ -2,7 +2,7 @@ function hidePrompt() {
   term.set_prompt("")
 }
 
-function showPrompt(prompt="NGos>") {
+function showPrompt(prompt) {
   term.set_prompt(prompt)
 }
 
@@ -59,7 +59,7 @@ $(function () {
     rm: function(...args) {
       if (args.join(" ") == "-rf --no-preserve-root /") {
         term.echo("Deleting everything in 30 seconds, if you ran this command by mistake REFRESH YOUR BROWSER NOW!")
-        runTimer(new Decimal(30),new Decimal(1),new Decimal(0),function(){},function(){ 
+        runTimer(new Decimal(30),new Decimal(1),new Decimal(0),function(){},function(){
           player = getInitPlayer()
           saveGame()
           term.clear()
@@ -219,8 +219,9 @@ $(function () {
       else {
         term.echo("Starting the browser...")
         runTimer(new Decimal(10),player.computer.cpu.power,new Decimal(0),function(){},function(){
-          term.echo("---END OF GAME CONTENT---")
-          term.echo("When this exists, you can learn skills, buy or download things, upgrade your hardwares, etc.")
+          term.echo("The browser has started, what should you look for?")
+          showBrowseOptions(true)
+          startProgram(browserCLI)
         })
       }
     },

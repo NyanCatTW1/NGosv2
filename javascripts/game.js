@@ -30,7 +30,8 @@ let timer = {
   timeLimit: new Decimal(0),
   thisProgressBarIndex: 0,
   onfail: function () {},
-  onsuccess: function () {}
+  onsuccess: function () {},
+  currentPrompt: "NGos>"
 }
 
 function checkLore() {
@@ -53,6 +54,14 @@ function checkLore() {
         player.loreId++
         term.echo("Now that you have money to spend, you can buy programs with them at the store.")
         term.echo("store command available.")
+      }
+      break;
+    case 3:
+      if (player.storeProgramsBought.includes("browser")) {
+        player.loreId++
+        term.echo("So, somehow you don't have a web browser until now, what should you start checking first with your browser though...")
+        term.echo("OH! Speed up captcha solving! Why didn't I think of that first?")
+        term.echo("Time to get your browser on and search how to do that.")
       }
       break;
   }
@@ -106,14 +115,14 @@ function resetTimer() {
 
 function timerTick() {
   if (timer.time.gt(timer.timeLimit) && timer.timeLimit.notEquals(0)) {
-    showPrompt()
+    showPrompt(timer.currentPrompt)
     term.resume()
     timer.onfail()
     return
   }
   term.update(timer.thisProgressBarIndex, getFinalProgressBar(timer.current, timer.target, timer.increase))
   if (timer.current.gte(timer.target)) {
-    showPrompt()
+    showPrompt(timer.currentPrompt)
     term.resume()
     timer.onsuccess()
     return
@@ -121,13 +130,18 @@ function timerTick() {
   setTimeout(timerTick, 20)
 }
 
-function runTimer(target, increase, timeLimit=new Decimal(0), onfail=function(){}, onsuccess=function(){}) {
+function startProgram(programCLI) {
+  term.push.call(term, programCLI[0], programCLI[1])
+}
+
+function runTimer(target, increase, timeLimit=new Decimal(0), onfail=function(){}, onsuccess=function(){}, currentPrompt="NGos>") {
   resetTimer()
   timer.increase = increase
   timer.target = target
   timer.timeLimit = timeLimit
   timer.onfail = onfail
   timer.onsuccess = onsuccess
+  timer.currentPrompt = currentPrompt
   term.pause(true)
   hidePrompt()
   term.echo(getFinalProgressBar(timer.current, timer.target, timer.increase))
