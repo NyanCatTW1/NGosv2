@@ -69,6 +69,7 @@ function loadGame(save, imported = false) {
 
         window[playerVarName] = save
         onLoad()
+        eval(`save${generateArrayAccessCode(versionTagName)} = reference${generateArrayAccessCode(versionTagName)}`)
         if (imported) onImportSuccess()
     } catch (err) {
         if (imported) {
