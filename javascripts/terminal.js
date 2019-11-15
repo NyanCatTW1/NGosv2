@@ -271,8 +271,35 @@ $(function() {
         if (args.length === 0) {
           term.echo("You need to give an argument to use this command! Use 'learn help' to see how to use this command correctly.")
           return
-        } else {
-          term.echo("ENDGAME: You are still figuring out how to register in that coding site, you should figure it out in a few days. or weeks.. or months... or years....Browsing in terminal isn't as easy as you thought.")
+        }
+        switch (args[0]) {
+          case "help":
+            term.echo("learn: Git gud.")
+            term.echo("Usage: 'learn list' lists available subjects to learn of")
+            term.echo("'learn start X' makes you start learning about subject X")
+            term.echo("'learn stat' displays how good you have gotten in all subjects")
+            break
+          case "list":
+            term.echo("Subjects to learn of:")
+            term.echo("Programming")
+            break
+          case "start":
+            let subject = args[1]
+            let keepLearning = true
+            let cycleDone = false
+            switch (subject) {
+              case "programming":
+                learnProgramming()
+                break
+              default:
+                term.echo(`Error: Subject "${subject}" does not exist or can't be learned`)
+                break
+            }
+            break
+          case "stat":
+            term.echo("Current stats:")
+            term.echo(`Programming: level ${shortenCosts(player.skills.programming.level)}, next level at ${shortenCosts(player.skills.programming.levelUpReq.minus(player.skills.programming.exp))} more exp.`)
+            break
         }
       },
       eval: function(...args) {

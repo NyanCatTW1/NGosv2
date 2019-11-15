@@ -18,7 +18,15 @@ function getInitPlayer() {
     loreId: 0,
     trustStage: 0,
     bestTrustStage: 0,
-    storeProgramsBought: []
+    storeProgramsBought: [],
+    skills: {
+      programming: {
+        exp: new Decimal(0),
+        level: new Decimal(0),
+        levelUpReq: new Decimal(1),
+        levelUpReqScale: new Decimal(1)
+      }
+    }
   }
 }
 var player = getInitPlayer()
