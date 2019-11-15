@@ -18,7 +18,7 @@ function getInitPlayer() {
     loreId: 0,
     trustStage: 0,
     bestTrustStage: 0,
-    storeProgramsBought: [],
+    storeProgramsBought: []
   }
 }
 var player = getInitPlayer()
@@ -29,8 +29,8 @@ let timer = {
   target: new Decimal(0),
   timeLimit: new Decimal(0),
   thisProgressBarIndex: 0,
-  onfail: function () {},
-  onsuccess: function () {},
+  onfail: function() {},
+  onsuccess: function() {},
   currentPrompt: "NGos>"
 }
 
@@ -42,20 +42,20 @@ function checkLore() {
         term.echo("Your computer is too weak for the game, you decides to do some captcha tasks online for some money for buying new hardwares.")
         term.echo("captcha command available.")
       }
-      break;
+      break
     case 1:
       if (player.trust.notEquals(0)) {
         player.loreId++
         term.echo("You have just done a task, to see your money and trust, type 'captcha stat'")
-      break;
-    }
+        break
+      }
     case 2:
       if (player.withdrawnMoney.notEquals(0)) {
         player.loreId++
         term.echo("Now that you have money to spend, you can buy programs with them at the store.")
         term.echo("store command available.")
       }
-      break;
+      break
     case 3:
       if (player.storeProgramsBought.includes("browser")) {
         player.loreId++
@@ -63,7 +63,7 @@ function checkLore() {
         term.echo("OH! Speed up captcha solving! Why didn't I think of that first?")
         term.echo("Time to get your browser on and search how to do that.")
       }
-      break;
+      break
   }
 }
 
@@ -75,14 +75,14 @@ function checkTrustStage() {
         term.echo("You should be able to withdraw your money with 'captcha withdraw' at this stage.")
         player.trustStage++
       }
-      break;
+      break
     case 1:
       if (player.trust.lt(10)) {
         term.echo("You have done mistakes and caused your trust to drop below 10.")
         term.echo("Withdraw is locked until you are trustworthy again.")
         player.trustStage--
       }
-      break;
+      break
   }
 }
 
@@ -97,14 +97,15 @@ function startGame() {
   setInterval(saveGame, 5000)
 }
 
-function gameLoop(diff) { // 1 diff = 0.001 seconds
+function gameLoop(diff) {
+  // 1 diff = 0.001 seconds
   var thisUpdate = new Date().getTime()
-  if (typeof diff === 'undefined') var diff = Math.min(thisUpdate - player.lastUpdate, 21600000);
+  if (typeof diff === "undefined") var diff = Math.min(thisUpdate - player.lastUpdate, 21600000)
   timer.time = timer.time.plus(diff)
   timer.current = Decimal.min(timer.target, timer.current.plus(timer.increase.div(1000).times(diff)))
   checkLore()
   checkTrustStage()
-  player.bestTrustStage = Math.max(player.trustStage,player.bestTrustStage)
+  player.bestTrustStage = Math.max(player.trustStage, player.bestTrustStage)
   player.lastUpdate = thisUpdate
 }
 
@@ -134,17 +135,39 @@ function startProgram(programCLI) {
   term.push.call(term, programCLI[0], programCLI[1])
 }
 
-function runTimer(target, increase, timeLimit=new Decimal(0), onfail=function(){}, onsuccess=function(){}, currentPrompt="NGos>") {
+function runTimer(config) {
   resetTimer()
-  timer.increase = increase
-  timer.target = target
-  timer.timeLimit = timeLimit
-  timer.onfail = onfail
-  timer.onsuccess = onsuccess
-  timer.currentPrompt = currentPrompt
+  timer.increase = config.increase
+  timer.target = config.target
+  timer.timeLimit = config.timeLimit || new Decimal(0)
+  timer.onfail = config.onfail || function() {}
+  timer.onsuccess = config.onsuccess || function() {}
+  timer.currentPrompt = config.currentPrompt || "NGos>"
   term.pause(true)
   hidePrompt()
   term.echo(getFinalProgressBar(timer.current, timer.target, timer.increase))
   timer.thisProgressBarIndex = term.last_index()
   timerTick()
 }
+
+var runWaitTimer = (second, code, currentPrompt = "NGos>") =>
+  runTimer({
+    target: new Decimal(second),
+    increase: new Decimal(1),
+    onsuccess: code,
+    currentPrompt: currentPrompt
+  })
+var runNetTimer = (kilobit, code, currentPrompt = "NGos>") =>
+  runTimer({
+    target: kilobit,
+    increase: player.computer.internet.speed,
+    onsuccess: code,
+    currentPrompt: currentPrompt
+  })
+var runCPUTimer = (cycle, code, currentPrompt = "NGos>") =>
+  runTimer({
+    target: cycle,
+    increase: player.computer.cpu.power,
+    onsuccess: code,
+    currentPrompt: currentPrompt
+  })

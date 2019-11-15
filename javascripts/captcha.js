@@ -1,5 +1,5 @@
 function getRandomNumber(bottom, top) {
-  return Math.floor(Math.random() * (1 + top - bottom)) + bottom;
+  return Math.floor(Math.random() * (1 + top - bottom)) + bottom
 }
 
 function verifyAnswer(answer) {
@@ -8,7 +8,7 @@ function verifyAnswer(answer) {
     return
   }
   term.echo("Validating your answer...")
-  runTimer(new Decimal(5), player.computer.internet.speed, new Decimal(0), function () {}, function () {
+  runNetTimer(new Decimal(5), function() {
     if (player.currentTaskAnswer == answer) {
       term.echo("Correct answer! You got 0.01 money and 1 trust for submitting right answer.")
       player.money = player.money.plus(0.01)
@@ -24,33 +24,36 @@ function verifyAnswer(answer) {
 
 function spawnCaptcha(level) {
   term.echo("Requesting and downloading new task...")
-  runTimer(new Decimal(10), player.computer.cpu.power, new Decimal(0), function () {}, function () {
+  runCPUTimer(new Decimal(10), function() {
     term.echo("New task:")
     switch (level) {
-    case 1:
-      let random = Math.random()
-      if (random < 0.8) {
-        let string = `${getRandomNumber(1,9)}${Math.random()<0.5?"+":"-"}${getRandomNumber(1,9)}`
-        player.currentTaskAnswer = eval(string)
-        player.currentTaskText = `Submit the value of ${string}`
-      } else if (random < 0.95) {
-        let string = ""
-        for (let i = 0; i < 6; i++) {
-          string += getRandomNumber(1, 9).toString()
+      case 1:
+        let random = Math.random()
+        if (random < 0.8) {
+          let string = `${getRandomNumber(1, 9)}${Math.random() < 0.5 ? "+" : "-"}${getRandomNumber(1, 9)}`
+          player.currentTaskAnswer = eval(string)
+          player.currentTaskText = `Submit the value of ${string}`
+        } else if (random < 0.95) {
+          let string = ""
+          for (let i = 0; i < 6; i++) {
+            string += getRandomNumber(1, 9).toString()
+          }
+          player.currentTaskAnswer = string
+            .split("")
+            .reverse()
+            .join("")
+          player.currentTaskText = `Submit the number ${string} in reversed text`
+        } else {
+          let string = ""
+          let answer = 0
+          for (let i = 0; i < 6; i++) {
+            let randomDigit = getRandomNumber(1, 9)
+            answer += randomDigit
+            string += randomDigit.toString()
+          }
+          player.currentTaskAnswer = answer.toString()
+          player.currentTaskText = `Submit the sum of digits for ${string}`
         }
-        player.currentTaskAnswer = string.split("").reverse().join("")
-        player.currentTaskText = `Submit the number ${string} in reversed text`
-      } else {
-        let string = ""
-        let answer = 0
-        for (let i = 0; i < 6; i++) {
-          let randomDigit = getRandomNumber(1, 9)
-          answer += randomDigit
-          string += randomDigit.toString()
-        }
-        player.currentTaskAnswer = answer.toString()
-        player.currentTaskText = `Submit the sum of digits for ${string}`
-      }
     }
     term.echo(player.currentTaskText)
   })
@@ -65,8 +68,8 @@ function newCaptcha(level, forced) {
       return
     } else {
       term.echo("Abandoning previous task")
-      runTimer(new Decimal(5), player.computer.cpu.power, new Decimal(0), function () {}, function () {
-        term.echo("Task abandoned, you lost 2 trusts for that.");
+      runCPUTimer(new Decimal(5), function() {
+        term.echo("Task abandoned, you lost 2 trusts for that.")
         player.trust = player.trust.minus(2)
         spawnCaptcha(level)
       })
