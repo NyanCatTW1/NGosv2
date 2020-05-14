@@ -243,7 +243,14 @@ $(function() {
     {
       greetings: `Welcome${player.loreId > 0 ? " back" : ""} to NGos!\n© 2020 Nyan cat, All Rights Reserved.\nType 'help' for a list of available commands.`,
       prompt: "NGos>",
-      checkArity: false
+      checkArity: false,
+      pauseEvents: false,
+      keydown: function(event, term) {  
+        if (isLearning && event.originalEvent.code == "KeyC") {
+          keepLearning = false
+          term.echo("You will stop learning after this learn cycle.")
+        }
+      }
     }
   )
   fakeCommandNotFound = cmdName => term.echo(`[[;red;]Command '${cmdName}' Not Found!]`)
