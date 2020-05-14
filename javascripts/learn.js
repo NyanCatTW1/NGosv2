@@ -15,7 +15,7 @@ function giveExp(subject, amount) {
     player.skills[subject].exp = new Decimal(0)
     player.skills[subject].level = player.skills[subject].level.plus(1)
     player.skills[subject].levelUpReq = player.skills[subject].levelUpReq.plus(player.skills[subject].levelUpReqScale)
-    term.echo(`Your ${subject} skill has level up to level ${shortenMoney(player.skills[subject].level)}! Next level up at ${shortenMoney(player.skills[subject].levelUpReq)} exp.`)
+    term.echo(`Your ${subject} skill has leveled up to level ${shortenMoney(player.skills[subject].level)}! Next level up at ${shortenMoney(player.skills[subject].levelUpReq)} exp.`)
   }
 }
 

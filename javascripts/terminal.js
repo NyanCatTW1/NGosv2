@@ -168,9 +168,9 @@ $(function() {
           if (args.length === 0) {
             term.echo("Better network available:")
             term.echo("Name: Dial-up network")
-            term.echo("Cost: 2 dollars")
-            term.echo("Speed: 5 kilobit/s")
-            term.echo("Capacity: 10 megabits")
+            term.echo("Cost: 2 money")
+            term.echo("Speed: 5 packet/s")
+            term.echo("Capacity: 10000 packets")
             term.echo("If you have enough money and wish to buy this network, run network purchase.")
             return
           }

@@ -1,6 +1,6 @@
 var browserCLI = [
   function(cmd) {
-    if (cmd == "C") {
+    if (cmd == "C" || cmd == "c") {
       term.echo("Trying to turn off the browser...")
       runWaitTimer(
         3,
@@ -35,9 +35,10 @@ var browserCLI = [
         function() {
           term.echo("After some searching you found the following AD.")
           term.echo("Having enough with your ancient morse-code based network?")
-          term.echo("Now for just TWO dollars you can enjoy your brand new DIAL UP network, ORDER NOW!")
-          term.echo("How to order: Run the network command included in your operating system, then follow the instructions to choose our service and pay, our worker will get your internet upgraded instantly then.")
-          term.echo("Note: By offering our service you accept our terms of service, and will have a 5 kilobit/s network, with up to 10 megabits of download/upload capacity, where you must pay for our service again.")
+          term.echo("Now for just TWO money you can enjoy your brand new DIAL UP network, ORDER NOW!")
+          term.echo("How to order: Run the network command included in your operating system with our ISPID 'dialup' and pay, our worker will get your internet upgraded instantly then.")
+          term.echo("Note: By offering our service you accept our terms of service, and will have a 5 packet/s network, with up to 10000 packets of download/upload capacity, you must pay again once you reach that capacity.")
+          term.echo("Dev note: You don't need to enter that ISPID thingy right now.")
           if (!player.storeProgramsBought.includes("network")) {
             player.storeProgramsBought.push("network")
             term.echo("\nnetwork command available")
@@ -98,9 +99,9 @@ function showBrowseOptions(startup = false) {
     term.echo("1: How to speed up your internet speed.")
   }
   if (player.loreId == 5) {
-    term.echo("2: How to make an AI that does thing for you.")
+    term.echo("2: How to make an AI that does things for you.")
   } else if (player.loreId == 6) {
-    term.echo("2: How to write code that does thing for you.")
+    term.echo("2: How to write code that does things for you.")
   }
   term.echo("C: How to close the browser.")
   return ""
