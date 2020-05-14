@@ -1,7 +1,9 @@
+/* exported hidePrompt */
 function hidePrompt() {
   term.set_prompt("")
 }
 
+/* exported showPrompt */
 function showPrompt(prompt) {
   term.set_prompt(prompt)
 }
