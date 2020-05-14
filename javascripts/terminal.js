@@ -45,6 +45,7 @@ $(function () {
         if (player.storeProgramsBought.includes("browser")) term.echo("browser: A web browser.")
         if (player.storeProgramsBought.includes("network")) term.echo("network: Network upgrade utility.")
         if (player.storeProgramsBought.includes("learn")) term.echo("learn: Teach yourself some skills so you can reach your target easier and faster. use 'learn help' for details.")
+        if (player.loreId >= 8) term.echo("vi: The best text editor for programming.")
       },
       save: function () {
         saveGame()

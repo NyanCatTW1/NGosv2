@@ -73,7 +73,7 @@ function checkLore() {
       }
       break
     case 7:
-      if (player.skills.programming.levelUpReqScale.gte(5)) {
+      if (player.skills.programming.level.gte(5)) {
         player.loreId++
         term.echo("You learned the very basics of programming, stuff like hello world, messing with small numbers, outputting things...")
         term.echo("Now you think it's time you try and automate some stuff, maybe start with automatically accept tasks?")
