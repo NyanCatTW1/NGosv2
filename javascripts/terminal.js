@@ -285,7 +285,7 @@ $(function() {
             term.echo("Subjects to learn of:")
             term.echo("Programming")
             break
-          case "start":
+          case "start": {
             let subject = args[1]
             let keepLearning = true
             let cycleDone = false
@@ -298,6 +298,7 @@ $(function() {
                 break
             }
             break
+          }
           case "stat":
             term.echo("Current stats:")
             term.echo(`Programming: level ${shortenCosts(player.skills.programming.level)}, next level at ${shortenCosts(player.skills.programming.levelUpReq.minus(player.skills.programming.exp))} more exp.`)
