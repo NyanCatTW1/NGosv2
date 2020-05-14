@@ -78,3 +78,90 @@ function newCaptcha(level, forced) {
     spawnCaptcha(level)
   }
 }
+
+function captchaCmd(...args) {
+  if (player.loreId < 1) {
+    fakeCommandNotFound("captcha")
+    return
+  }
+  if (args.length === 0) {
+    term.echo("You need to give an argument to use this command! Use 'captcha help' to see how to use this command correctly.")
+  } else {
+    switch (args[0]) {
+      case "help":
+        term.echo("captcha: Captcha task manager")
+        term.echo("Usage: 'captcha new' requests a new task for solving")
+        term.echo(" ".repeat(7) + "'captcha current' displays the task in case you forgot it")
+        term.echo(" ".repeat(7) + "'captcha submit X' submits X as the answer to the captcha")
+        if (player.loreId >= 2) term.echo(" ".repeat(7) + "'captcha stat' displays the stat of your account")
+        if (player.bestTrustStage >= 1) term.echo(" ".repeat(7) + "'captcha withdraw' withdraws all the money from your account, which makes them freely spendable to you")
+        term.echo("You gain 0.01 money and 1 trust for solving a number captcha.")
+        break
+      case "new":
+        newCaptcha.call(null, 1, args[1] == "--force" ? true : false)
+        break
+      case "current":
+        if (player.currentTaskText === "") {
+          term.echo("Error: You haven't start a task yet.")
+          return
+        }
+        term.echo("Current task:")
+        term.echo(player.currentTaskText)
+        break
+      case "submit":
+        if (args.length < 2) {
+          term.echo("You need to type the answer to be submitted!")
+          break
+        }
+        term.echo("Submitting your answer...")
+        runNetTimer(new Decimal(5), function() {
+          verifyAnswer.call(null, args[1])
+        })
+        break
+      case "stat":
+        if (player.loreId < 2) {
+          term.echo("Error: You have done no task so far, so there isn't any stat to show.")
+          break
+        }
+        term.echo("Requesting your stats from the server...")
+        runNetTimer(new Decimal(5), function() {
+          term.echo(`Money available for withdraw: ${player.money}`)
+          term.echo(`Trust level: ${player.trust}`)
+          switch (player.trustStage) {
+            case 0:
+              term.echo("Withdraw is available at 10 trust")
+              break
+            default:
+              term.echo("You reached the highest trust we can handle right now, blame dev for this!")
+              break
+          }
+        })
+        break
+      case "withdraw":
+        if (player.bestTrustStage < 1) {
+          term.echo("Error: No such option is available! Use 'captcha help' to see how to use this command correctly.")
+        } else {
+          term.echo("Verifying your trust level...")
+          runNetTimer(new Decimal(5), function() {
+            if (player.trustStage < 1) {
+              term.echo("Sorry, but your trust level is too low for a withdraw, please retry once you gain at least 10 trust.")
+            } else {
+              term.echo("Trust level matches minimum requirement, withdrawing all money from your account...")
+              runTimer({
+                target: player.money,
+                increase: new Decimal(0.01),
+                onsuccess: function() {
+                  player.withdrawnMoney = player.withdrawnMoney.plus(player.money)
+                  player.money = new Decimal(0)
+                  term.echo("Operation complete.")
+                }
+              })
+            }
+          })
+        }
+        break
+      default:
+        term.echo("Error: No such option is available! Use 'captcha help' to see how to use this command correctly.")
+    }
+  }
+}
