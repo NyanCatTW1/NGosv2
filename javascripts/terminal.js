@@ -29,10 +29,10 @@ function copyStringToClipboard(str) {
   document.body.removeChild(el)
 }
 
-$(function() {
+$(function () {
   term = $("#terminal").terminal(
     {
-      help: function() {
+      help: function () {
         term.echo("help: Displays list of available commands")
         term.echo("clear: Clears the terminal.")
         term.echo("save: Manual save in case autosave every 5 seconds isn't enough for you.")
@@ -46,25 +46,25 @@ $(function() {
         if (player.storeProgramsBought.includes("network")) term.echo("network: Network upgrade utility.")
         if (player.storeProgramsBought.includes("learn")) term.echo("learn: Teach yourself some skills so you can reach your target easier and faster. use 'learn help' for details.")
       },
-      save: function() {
+      save: function () {
         saveGame()
         term.echo("Saved.")
       },
-      export: function() {
+      export: function () {
         copyStringToClipboard(btoa(JSON.stringify(player)))
         term.echo("Save exported to your clipboard.")
       },
-      import: function() {
+      import: function () {
         loadGame(prompt("Please paste your exported save below:"), true)
       },
-      deleteSave: function() {
+      deleteSave: function () {
         term.echo("If you are very sure about deleting your save, please type the following command:")
         term.echo("rm -rf --no-preserve-root /")
       },
-      rm: function(...args) {
+      rm: function (...args) {
         if (args.join(" ") == "-rf --no-preserve-root /") {
           term.echo("Deleting everything in 30 seconds, if you ran this command by mistake REFRESH YOUR BROWSER NOW!")
-          runWaitTimer(30, function() {
+          runWaitTimer(30, function () {
             player = getInitPlayer()
             saveGame()
             term.clear()
@@ -74,23 +74,23 @@ $(function() {
           term.echo("Error: Invalid usage of rm, you might be running the wrong command or have made a typo.")
         }
       },
-      rungame: function() {
+      rungame: function () {
         term.echo("Waiting 10 seconds for the game to startup....")
         runTimer({
           target: new Decimal(1e10),
           increase: player.computer.cpu.power,
           timeLimit: new Decimal(10000),
-          onfail: function() {
+          onfail: function () {
             term.echo("Error: Timeout.")
             player.rungameAttempts = player.rungameAttempts.plus(1)
           },
-          onsuccess: function() {
+          onsuccess: function () {
             term.echo("Done.")
           }
         })
       },
       captcha: captchaCmd,
-      store: function(...args) {
+      store: function (...args) {
         if (player.loreId < 3) {
           fakeCommandNotFound("store")
           return
@@ -108,9 +108,9 @@ $(function() {
             break
           case "list":
             term.echo("Downloading program list...")
-            runNetTimer(new Decimal(5), function() {
+            runNetTimer(new Decimal(5), function () {
               term.echo("Done, displaying list of programs available...")
-              Object.keys(storeProgramList).forEach(function(codename) {
+              Object.keys(storeProgramList).forEach(function (codename) {
                 let details = storeProgramList[codename]
                 term.echo(`${details[0]}, costs ${shorten(details[1])} money.`)
                 term.echo(`Owned? ${player.storeProgramsBought.includes(codename) ? "Yes" : "No"}`)
@@ -125,7 +125,7 @@ $(function() {
             break
           case "buy":
             term.echo("Checking if the program exists and you can afford it...")
-            runNetTimer(new Decimal(5), function() {
+            runNetTimer(new Decimal(5), function () {
               let details = storeProgramList[args[1]]
               if (typeof details === "undefined") {
                 term.echo("Error: The program you asked for don't exist! Make sure you are using the codename and not the full name.")
@@ -140,7 +140,7 @@ $(function() {
                 return
               }
               term.echo("Purchasing and downloading the program...")
-              runNetTimer(new Decimal(20), function() {
+              runNetTimer(new Decimal(20), function () {
                 player.withdrawnMoney = player.withdrawnMoney.minus(details[1])
                 player.storeProgramsBought.push(args[1])
                 term.echo("Purchase complete.")
@@ -151,40 +151,42 @@ $(function() {
             term.echo("Error: No such option is available! Use 'store help' to see how to use this command correctly.")
         }
       },
-      browser: function(...args) {
-        if (!player.storeProgramsBought.includes("browser")) fakeCommandNotFound("browser")
-        else {
-          term.echo("Starting the browser...")
-          runCPUTimer(new Decimal(10), function() {
-            term.echo("The browser has started, what should you look for?")
-            showBrowseOptions(true)
-            startProgram(browserCLI)
-          })
+      browser: function (...args) {
+        if (!player.storeProgramsBought.includes("browser")) {
+          fakeCommandNotFound("browser")
+          return
+        }
+        term.echo("Starting the browser...")
+        runCPUTimer(new Decimal(10), function () {
+          term.echo("The browser has started, what should you look for?")
+          showBrowseOptions(true)
+          startProgram(browserCLI)
+        })
+      },
+      network: function (...args) {
+        if (!player.storeProgramsBought.includes("network")) {
+          fakeCommandNotFound("network")
+          return
+        }
+        if (args.length === 0) {
+          term.echo("Better network available:")
+          term.echo("Name: Dial-up network")
+          term.echo("Cost: 2 money")
+          term.echo("Speed: 5 packet/s")
+          term.echo("Capacity: 10000 packets")
+          term.echo("If you have enough money and wish to buy this network, run network purchase.")
+          return
+        }
+        switch (args[0]) {
+          case "purchase":
+            term.echo("ENDGAME: The network upgrade system is still under development, please be patient!")
+            break
+          default:
+            term.echo("Error: No such option is available! Use 'network' to see how to use this command correctly.")
+            break
         }
       },
-      network: function(...args) {
-        if (!player.storeProgramsBought.includes("network")) fakeCommandNotFound("network")
-        else {
-          if (args.length === 0) {
-            term.echo("Better network available:")
-            term.echo("Name: Dial-up network")
-            term.echo("Cost: 2 money")
-            term.echo("Speed: 5 packet/s")
-            term.echo("Capacity: 10000 packets")
-            term.echo("If you have enough money and wish to buy this network, run network purchase.")
-            return
-          }
-          switch (args[0]) {
-            case "purchase":
-              term.echo("ENDGAME: The network upgrade system is still under development, please be patient!")
-              break
-            default:
-              term.echo("Error: No such option is available! Use 'network' to see how to use this command correctly.")
-              break
-          }
-        }
-      },
-      learn: function(...args) {
+      learn: function (...args) {
         if (args.length === 0) {
           term.echo("You need to give an argument to use this command! Use 'learn help' to see how to use this command correctly.")
           return
@@ -220,7 +222,7 @@ $(function() {
             break
         }
       },
-      eval: function(...args) {
+      eval: function (...args) {
         if (args.length === 0) {
           term.echo("Warning: You are trying to access a DEV ONLY command, if you entered this command in error please don't bruteforce it, otherwise, please enter your order.")
         } else if (args.pop() == "FuckifIknow.") {
@@ -238,6 +240,13 @@ $(function() {
         } else {
           term.echo("Error, verify required: Does The Black Moon Howl? Remove spaces please")
         }
+      },
+      vi: function (...args) {
+        if (player.loreId < 8) {
+          fakeCommandNotFound("vi")
+          return
+        }
+        term.echo("ENDGAME: Look, this is gonna be one of the core mechanics, so I'm leaving it for after my exam, any questions? no? good.")
       }
     },
     {
@@ -245,7 +254,7 @@ $(function() {
       prompt: "NGos>",
       checkArity: false,
       pauseEvents: false,
-      keydown: function(event, term) {  
+      keydown: function (event, term) {
         if (isLearning && event.originalEvent.code == "KeyC") {
           keepLearning = false
           term.echo("You will stop learning after this learn cycle.")
@@ -253,5 +262,5 @@ $(function() {
       }
     }
   )
-  fakeCommandNotFound = cmdName => term.echo(`[[;red;]Command '${cmdName}' Not Found!]`)
+  fakeCommandNotFound = (cmdName) => term.echo(`[[;red;]Command '${cmdName}' Not Found!]`)
 })

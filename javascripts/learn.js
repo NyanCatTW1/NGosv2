@@ -4,9 +4,9 @@ var keepLearning = true
 function until(conditionFunction) {
   // https://stackoverflow.com/a/52657929
 
-  const poll = resolve => {
+  const poll = (resolve) => {
     if (conditionFunction()) resolve()
-    else setTimeout(_ => poll(resolve), 50)
+    else setTimeout((_) => poll(resolve), 50)
   }
 
   return new Promise(poll)
@@ -31,18 +31,18 @@ async function learnProgramming() {
   while (keepLearning) {
     cycleDone = false
     term.echo("The webpage is being downloaded...")
-    runNetTimer(new Decimal(10), function() {
+    runNetTimer(new Decimal(10), function () {
       term.echo("The browser is rendering the webpage...")
-      runCPUTimer(new Decimal(10), function() {
+      runCPUTimer(new Decimal(10), function () {
         term.echo("You are learning about the webpage's content...")
-        runWaitTimer(5, function() {
+        runWaitTimer(5, function () {
           term.echo("Done! You gained 1 exp.")
           giveExp("programming", new Decimal(1))
           cycleDone = true
         })
       })
     })
-    await until(_ => cycleDone == true)
+    await until((_) => cycleDone == true)
   }
   isLearning = false
 }

@@ -37,8 +37,8 @@ let timer = {
   target: new Decimal(0),
   timeLimit: new Decimal(0),
   thisProgressBarIndex: 0,
-  onfail: function() {},
-  onsuccess: function() {},
+  onfail: function () {},
+  onsuccess: function () {},
   currentPrompt: "NGos>"
 }
 
@@ -72,6 +72,14 @@ function checkLore() {
         term.echo("Time to get your browser on and search how to do that.")
       }
       break
+    case 7:
+      if (player.skills.programming.levelUpReqScale.gte(5)) {
+        player.loreId++
+        term.echo("You learned the very basics of programming, stuff like hello world, messing with small numbers, outputting things...")
+        term.echo("Now you think it's time you try and automate some stuff, maybe start with automatically accept tasks?")
+        term.echo("People online say real programmers use vi, so you think you'll do that as well.")
+        term.echo("vi command available")
+      }
   }
 }
 
@@ -148,8 +156,8 @@ function runTimer(config) {
   timer.increase = config.increase
   timer.target = config.target
   timer.timeLimit = config.timeLimit || new Decimal(0)
-  timer.onfail = config.onfail || function() {}
-  timer.onsuccess = config.onsuccess || function() {}
+  timer.onfail = config.onfail || function () {}
+  timer.onsuccess = config.onsuccess || function () {}
   timer.currentPrompt = config.currentPrompt || "NGos>"
   term.pause(true)
   hidePrompt()

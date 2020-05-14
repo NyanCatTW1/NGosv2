@@ -8,7 +8,7 @@ function verifyAnswer(answer) {
     return
   }
   term.echo("Validating your answer...")
-  runNetTimer(new Decimal(5), function() {
+  runNetTimer(new Decimal(5), function () {
     if (player.currentTaskAnswer == answer) {
       term.echo("Correct answer! You got 0.01 money and 1 trust for submitting right answer.")
       player.money = player.money.plus(0.01)
@@ -24,7 +24,7 @@ function verifyAnswer(answer) {
 
 function spawnCaptcha(level) {
   term.echo("Requesting and downloading new task...")
-  runCPUTimer(new Decimal(10), function() {
+  runCPUTimer(new Decimal(10), function () {
     term.echo("New task:")
     switch (level) {
       case 1:
@@ -38,10 +38,7 @@ function spawnCaptcha(level) {
           for (let i = 0; i < 6; i++) {
             string += getRandomNumber(1, 9).toString()
           }
-          player.currentTaskAnswer = string
-            .split("")
-            .reverse()
-            .join("")
+          player.currentTaskAnswer = string.split("").reverse().join("")
           player.currentTaskText = `Submit the number ${string} in reversed text`
         } else {
           let string = ""
@@ -68,7 +65,7 @@ function newCaptcha(level, forced) {
       return
     } else {
       term.echo("Abandoning previous task")
-      runCPUTimer(new Decimal(5), function() {
+      runCPUTimer(new Decimal(5), function () {
         term.echo("Task abandoned, you lost 2 trusts for that.")
         player.trust = player.trust.minus(2)
         spawnCaptcha(level)
@@ -118,7 +115,7 @@ function captchaCmd(...args) {
           break
         }
         term.echo("Submitting your answer...")
-        runNetTimer(new Decimal(5), function() {
+        runNetTimer(new Decimal(5), function () {
           verifyAnswer.call(null, args[1])
         })
         break
@@ -128,7 +125,7 @@ function captchaCmd(...args) {
           break
         }
         term.echo("Requesting your stats from the server...")
-        runNetTimer(new Decimal(5), function() {
+        runNetTimer(new Decimal(5), function () {
           term.echo(`Money available for withdraw: ${player.money}`)
           term.echo(`Trust level: ${player.trust}`)
           switch (player.trustStage) {
@@ -146,7 +143,7 @@ function captchaCmd(...args) {
           term.echo("Error: No such option is available! Use 'captcha help' to see how to use this command correctly.")
         } else {
           term.echo("Verifying your trust level...")
-          runNetTimer(new Decimal(5), function() {
+          runNetTimer(new Decimal(5), function () {
             if (player.trustStage < 1) {
               term.echo("Sorry, but your trust level is too low for a withdraw, please retry once you gain at least 10 trust.")
             } else {
@@ -154,7 +151,7 @@ function captchaCmd(...args) {
               runTimer({
                 target: player.money,
                 increase: new Decimal(0.01),
-                onsuccess: function() {
+                onsuccess: function () {
                   player.withdrawnMoney = player.withdrawnMoney.plus(player.money)
                   player.money = new Decimal(0)
                   term.echo("Operation complete.")
