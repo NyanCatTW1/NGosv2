@@ -219,7 +219,7 @@ $(function () {
           }
           case "stat":
             term.echo("Current stats:")
-            term.echo(`Programming: level ${shortenCosts(player.skills.programming.level)}, next level at ${shortenCosts(player.skills.programming.levelUpReq.minus(player.skills.programming.exp))} more exp.`)
+            term.echo(`Programming: level ${shortenCosts(player.skills.programming.level)}, next level at ${shortenCosts(expTillLevelUp("programming"))} more exp.`)
             break
         }
       },
