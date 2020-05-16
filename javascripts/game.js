@@ -42,47 +42,6 @@ let timer = {
   currentPrompt: "NGos>"
 }
 
-function checkLore() {
-  switch (player.loreId) {
-    case 0:
-      if (player.rungameAttempts.gte(1)) {
-        player.loreId++
-        term.echo("Your computer is too weak for the game, you decides to do some captcha tasks online for some money for buying new hardwares.")
-        term.echo("captcha command available.")
-      }
-      break
-    case 1:
-      if (player.trust.notEquals(0)) {
-        player.loreId++
-        term.echo("You have just done a task, to see your money and trust, type 'captcha stat'")
-        break
-      }
-    case 2:
-      if (player.withdrawnMoney.notEquals(0)) {
-        player.loreId++
-        term.echo("Now that you have money to spend, you can buy programs with them at the store.")
-        term.echo("store command available.")
-      }
-      break
-    case 3:
-      if (player.storeProgramsBought.includes("browser")) {
-        player.loreId++
-        term.echo("So, somehow you don't have a web browser until now, what should you start checking first with your browser though...")
-        term.echo("OH! Speed up captcha solving! Why didn't I think of that first?")
-        term.echo("Time to get your browser on and search how to do that.")
-      }
-      break
-    case 7:
-      if (player.skills.programming.level.gte(5)) {
-        player.loreId++
-        term.echo("You learned the very basics of programming, stuff like hello world, messing with small numbers, outputting things...")
-        term.echo("Now you think it's time you try and automate some stuff, maybe start with automatically accept tasks?")
-        term.echo("People online say real programmers use vi, so you think you'll do that as well.")
-        term.echo("vi command available")
-      }
-  }
-}
-
 function checkTrustStage() {
   switch (player.trustStage) {
     case 0:

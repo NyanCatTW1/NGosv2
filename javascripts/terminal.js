@@ -40,6 +40,7 @@ $(function () {
         term.echo("import: Imports your exported save.")
         term.echo("deleteSave: HARD RESETS THE GAME WITHOUT ANYTHING IN RETURN")
         term.echo("rungame: Attempt to start the game")
+        if (player.loreId >= 1) term.echo("lore: Displays last lore, or 'lore X' for certain lore, or 'lore all' to display all previous lores")
         if (player.loreId >= 1) term.echo("captcha: Captcha task manager, use 'captcha help' for details.")
         if (player.loreId >= 3) term.echo("store: App Store for NGOS! Use 'store help' for details.")
         if (player.storeProgramsBought.includes("browser")) term.echo("browser: A web browser.")
@@ -90,6 +91,7 @@ $(function () {
           }
         })
       },
+      lore: loreCmd,
       captcha: captchaCmd,
       store: function (...args) {
         if (player.loreId < 3) {

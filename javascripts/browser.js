@@ -17,12 +17,7 @@ var browserCLI = [
       runWaitTimer(
         30,
         function () {
-          term.echo("After some searching you found the following tricks, in ascending order of usefulness to you")
-          term.echo("1. Practice so you can simply solve them faster")
-          term.echo("2. Get a faster network so you can download and solve captcha tasks faster")
-          term.echo("3. If you dare to, write an AI and let that solve it for you")
-          term.echo("Only second and thrid sounds useful to you right now, which should you do first though?")
-          player.loreId++
+          displayLore(5)
           showBrowseOptions()
         },
         "choose> "
@@ -54,10 +49,7 @@ var browserCLI = [
       runWaitTimer(
         60,
         function () {
-          term.echo("After searching you learned that you don't need AI for your simple captcha tasks.")
-          term.echo("Instead you can write codes to complete those tasks automatically.")
-          term.echo("Better go back and learn how to write codes to do that.")
-          player.loreId++
+          displayLore(6)
           showBrowseOptions()
         },
         "choose> "
@@ -68,8 +60,7 @@ var browserCLI = [
       runWaitTimer(
         120,
         function () {
-          term.echo("After going through dozens of paid website ADs, you find a free website to learn coding")
-          term.echo("Better add it to your bookmark so you can learn coding and 'AIize' captcha solving")
+          displayLore(7)
           if (!player.storeProgramsBought.includes("learn")) {
             player.storeProgramsBought.push("learn")
             term.echo("\nlearn command available")
