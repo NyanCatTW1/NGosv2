@@ -1,5 +1,6 @@
 function getInitPlayer() {
   return {
+    saveVersion: 1,
     computer: {
       cpu: {
         power: new Decimal(1)
@@ -23,8 +24,12 @@ function getInitPlayer() {
       programming: {
         exp: new Decimal(0),
         level: new Decimal(0),
-        levelUpReq: new Decimal(1),
-        levelUpReqScale: new Decimal(1)
+        levelUpReq: new Decimal(1)
+      },
+      vi: {
+        exp: new Decimal(0),
+        level: new Decimal(0),
+        levelUpReq: new Decimal(10)
       }
     }
   }
@@ -47,7 +52,7 @@ function checkTrustStage() {
     case 0:
       if (player.trust.gte(10)) {
         term.echo("You have just reached 10 trusts! Congratluations!")
-        term.echo("You should be able to withdraw your money with 'captcha withdraw' at this stage.")
+        term.echo("You are now able to withdraw your money with 'captcha withdraw'")
         player.trustStage++
       }
       break
@@ -62,12 +67,13 @@ function checkTrustStage() {
 }
 
 function startInterval() {
-  gameLoopIntervalId = setInterval(gameLoop, 10)
+  gameLoopIntervalId = setInterval(gameLoop, 33)
 }
 
 function startGame() {
   let savefile = localStorage.getItem(saveName)
   if (!(savefile === null)) loadGame(savefile)
+  initTerm()
   startInterval()
   setInterval(saveGame, 5000)
 }
@@ -132,9 +138,9 @@ var runWaitTimer = (second, code, currentPrompt = "NGos>") =>
     onsuccess: code,
     currentPrompt: currentPrompt
   })
-var runNetTimer = (kilobit, code, currentPrompt = "NGos>") =>
+var runNetTimer = (packet, code, currentPrompt = "NGos>") =>
   runTimer({
-    target: kilobit,
+    target: packet,
     increase: player.computer.internet.speed,
     onsuccess: code,
     currentPrompt: currentPrompt

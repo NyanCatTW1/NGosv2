@@ -5,27 +5,37 @@ let saveName = "ngossave"
 let initPlayerFunctionName = "getInitPlayer"
 let playerVarName = "player" // DO NOT USE THE WORD "SAVE"
 let importDangerAlertText = "Your imported save seems to be missing some values, which means importing this save might be destructive, if you have made a backup of your current save and are sure about importing this save please press OK, if not, press cancel and the save will not be imported."
-let versionTagName = "version" // Put the variable name of what you are using for savefile version here
+let versionTagName = "saveVersion" // Put the variable name of what you are using for savefile version here
 let arrayTypes = {
   // For EACH array in your player variable, put a key/value to define its type like I did below
   storeProgramsBought: "String"
 }
 
 function onImportError() {
-  term.echo("Error: Imported save is in invalid format, please make sure you've copied the save correctly and isn't just typing gibberish.")
+  term.echo("Error occured while importing the savefile, please make sure you've copied the save correctly and isn't just typing gibberish. Otherwise, report this to the developer(Nyan Cat) immediately!")
 }
 
-function onLoadError() {
+function onLoadError(save) {
+  if (term === undefined) initTerm()
   term.echo("I think you got your save messed up so bad we can't load it, the save have been exported automatically to your clipboard for debug purpose, please send it to the developer(Nyan cat) to see what's wrong!")
   copyStringToClipboard(save)
 }
 
 function onImportSuccess() {
+  term.clear()
   term.echo("Save imported successfully.")
 }
 
 function onLoad() {
   // Put your savefile updating codes here
+
+  // Version 0 -> 1
+  _.unset(player, "skills.programming.levelUpReqScale")
+  _.unset(player, "skills.vi.levelUpReqScale")
+
+  for (let skill of Object.keys(levelUpReqFuncs)) {
+    updateLevelUpReq(skill)
+  }
 }
 // Only change things above to fit your game UNLESS you know what you're doing
 
@@ -77,11 +87,11 @@ function loadGame(save, imported = false) {
   } catch (err) {
     if (imported) {
       console.log(err)
-      onImportError()
+      onImportError(save)
       return
     } else {
       console.log(err)
-      onLoadError()
+      onLoadError(save)
       return
     }
   }

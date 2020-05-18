@@ -29,7 +29,12 @@ Better add it to your bookmark so you can learn coding and 'AIize' captcha solvi
   `You learned the very basics of programming, stuff like hello world, messing with small numbers, outputting things...
 Now you think it's time you try and automate some stuff, maybe start with automatically accepting tasks?
 People online say real programmers use vi, so you think you'll do that as well.
-vi command available`
+vi command available`,
+  // 9
+  `What is going on here? You can't seem to type anything, you can't even close the editor! Should have looked up tutorials first...
+Well, I guess all you can do now is restart the system, physically, and make sure not to start the editor again until you learn how to use it.`,
+  // 10
+  `So according to the guide, you need to type certain commands in order to use the editor properly, and there are quite a few commands and hotkeys out there... You should learn them time to time.`
 ]
 
 function checkLore() {
@@ -57,6 +62,11 @@ function checkLore() {
     case 7:
       if (player.skills.programming.level.gte(5)) {
         displayLore(8)
+      }
+      break
+    case 8:
+      if (player.skills.vi.level.gte(1)) {
+        displayLore(9)
       }
       break
   }

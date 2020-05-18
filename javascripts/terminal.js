@@ -1,9 +1,9 @@
-/* exported hidePrompt */
+var term
+
 function hidePrompt() {
   term.set_prompt("")
 }
 
-/* exported showPrompt */
 function showPrompt(prompt) {
   term.set_prompt(prompt)
 }
@@ -29,7 +29,7 @@ function copyStringToClipboard(str) {
   document.body.removeChild(el)
 }
 
-$(function () {
+function initTerm() {
   term = $("#terminal").terminal(
     {
       help: function () {
@@ -197,24 +197,22 @@ $(function () {
         switch (args[0]) {
           case "help":
             term.echo("learn: Git gud.")
-            term.echo("Usage: 'learn list' lists available subjects to learn of")
-            term.echo("'learn start X' makes you start learning about subject X")
-            term.echo("'learn stat' displays how good you have gotten in all subjects")
+            term.echo("Usage: 'learn list' lists available skills to learn of")
+            term.echo("'learn start X' makes you start learning about skill X")
+            term.echo("'learn stat' displays how good you have gotten in all skills")
             break
           case "list":
-            term.echo("Subjects to learn of:")
+            term.echo("Skills to learn of:")
             term.echo("Programming")
             break
           case "start": {
-            let subject = args[1]
-            let keepLearning = true
-            let cycleDone = false
-            switch (subject) {
+            let skill = args[1]
+            switch (skill) {
               case "programming":
                 learnProgramming()
                 break
               default:
-                term.echo(`Error: Subject "${subject}" does not exist or can't be learned`)
+                term.echo(`Error: skill "${skill}" does not exist or can't be learned`)
                 break
             }
             break
@@ -222,6 +220,7 @@ $(function () {
           case "stat":
             term.echo("Current stats:")
             term.echo(`Programming: level ${shortenCosts(player.skills.programming.level)}, next level at ${shortenCosts(expTillLevelUp("programming"))} more exp.`)
+            term.echo(`Vi: level ${shortenCosts(player.skills.vi.level)}, next level at ${shortenCosts(expTillLevelUp("vi"))} more exp.`)
             break
         }
       },
@@ -249,7 +248,14 @@ $(function () {
           fakeCommandNotFound("vi")
           return
         }
-        term.echo("ENDGAME: Look, this is gonna be one of the core mechanics, so I'm leaving it for after my exam, any questions? no? good.")
+        term.echo("Starting vi...")
+        runCPUTimer(new Decimal(3), function () {
+          if (player.loreId < 10) {
+            startProgram(storyViCLI)
+            return
+          }
+          term.echo("ENDGAME: In the next version, you can finally start automating stuff, and there might or might not be a code display, depending on the difficulty of that.")
+        })
       }
     },
     {
@@ -266,4 +272,4 @@ $(function () {
     }
   )
   fakeCommandNotFound = (cmdName) => term.echo(`[[;red;]Command '${cmdName}' Not Found!]`)
-})
+}

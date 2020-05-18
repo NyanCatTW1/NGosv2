@@ -1,5 +1,9 @@
 var isLearning = false
 var keepLearning = true
+var levelUpReqFuncs = {
+  programming: (level) => level.plus(1),
+  vi: (level) => (level.eq(0) ? new Decimal(10) : new Decimal(1 / 0))
+}
 
 function until(conditionFunction) {
   // https://stackoverflow.com/a/52657929
@@ -12,18 +16,20 @@ function until(conditionFunction) {
   return new Promise(poll)
 }
 
-var expTillLevelUp = (subject) => player.skills[subject].levelUpReq.minus(player.skills[subject].exp)
+var expTillLevelUp = (skill) => player.skills[skill].levelUpReq.minus(player.skills[skill].exp)
+var updateLevelUpReq = (skill) => (player.skills[skill].levelUpReq = levelUpReqFuncs[skill](player.skills[skill].level))
 
-function giveExp(subject, amount) {
-  player.skills[subject].exp = player.skills[subject].exp.plus(amount)
-  term.echo(`Done! You gained ${shortenMoney(amount)} exp.`)
-  if (player.skills[subject].exp.gte(player.skills[subject].levelUpReq)) {
-    player.skills[subject].exp = new Decimal(0)
-    player.skills[subject].level = player.skills[subject].level.plus(1)
-    player.skills[subject].levelUpReq = player.skills[subject].levelUpReq.plus(player.skills[subject].levelUpReqScale)
-    term.echo(`Your ${subject} skill has leveled up to level ${shortenMoney(player.skills[subject].level)}! Next level up at ${shortenMoney(player.skills[subject].levelUpReq)} more exp.`)
+function giveExp(skill, amount, showGain = true, showLevelUp = true) {
+  if (player.skills[skill].levelUpReq.eq(1 / 0)) return
+  player.skills[skill].exp = player.skills[skill].exp.plus(amount)
+  if (showGain) term.echo(`Done! You gained ${shortenMoney(amount)} exp.`)
+  if (player.skills[skill].exp.gte(player.skills[skill].levelUpReq)) {
+    player.skills[skill].exp = new Decimal(0)
+    player.skills[skill].level = player.skills[skill].level.plus(1)
+    updateLevelUpReq(skill)
+    if (showLevelUp) term.echo(`Your ${skill} skill has leveled up to level ${shortenMoney(player.skills[skill].level)}! Next level up at ${shortenMoney(player.skills[skill].levelUpReq)} more exp.`)
   } else {
-    term.echo(`Next level up at ${shortenMoney(expTillLevelUp(subject))} more exp.`)
+    if (showGain) term.echo(`Next level up at ${shortenMoney(expTillLevelUp(skill))} more exp.`)
   }
 }
 
