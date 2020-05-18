@@ -75,6 +75,7 @@ var browserCLI = [
               },
               "choose> "
             )
+            break
           case 9:
             term.echo("Looking for even more tutorials online...")
             runWaitTimer(30, function () {
@@ -85,6 +86,7 @@ var browserCLI = [
                 term.echo("You can now use the vi editor with simplfied controls")
               }
             })
+            break
           default:
             term.echo("Error: Invalid option.")
         }
