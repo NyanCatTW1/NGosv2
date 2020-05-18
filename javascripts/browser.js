@@ -78,14 +78,19 @@ var browserCLI = [
             break
           case 9:
             term.echo("Looking for even more tutorials online...")
-            runWaitTimer(30, function () {
-              displayLore(10)
-              if (player.skills.vi.level.eq(1)) {
-                player.skills.vi.level = new Decimal(2)
-                term.echo("\nvi skill unlocked.")
-                term.echo("You can now use the vi editor with simplfied controls")
-              }
-            })
+            runWaitTimer(
+              30,
+              function () {
+                displayLore(10)
+                if (player.skills.vi.level.eq(1)) {
+                  player.skills.vi.level = new Decimal(2)
+                  term.echo("\nvi skill unlocked.")
+                  term.echo("You can now use the vi editor with simplfied controls")
+                }
+                showBrowseOptions()
+              },
+              "choose> "
+            )
             break
           default:
             term.echo("Error: Invalid option.")
